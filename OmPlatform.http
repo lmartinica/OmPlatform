@@ -1,0 +1,6 @@
+@OmPlatform_HostAddress = http://localhost:5223
+
+GET {{OmPlatform_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
