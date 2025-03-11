@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using OmPlatform.DTOs.User;
 
 namespace OmPlatform.Controllers
 {
@@ -14,7 +15,7 @@ namespace OmPlatform.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<GetUserDto> Get()
         {
             return null;
         }
