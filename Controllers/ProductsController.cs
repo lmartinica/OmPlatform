@@ -17,7 +17,6 @@ namespace OmPlatform.Controllers
         [HttpGet]
         public IEnumerable<GetProductDto> GetList()
         {
-            // Test Data
             return new List<GetProductDto>
             {
                 new GetProductDto { Id = 1, Name = "Product 1", Price = 100, Stock = 1 },
