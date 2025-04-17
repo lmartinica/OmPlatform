@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using OmPlatform.Core;
 using OmPlatform.DTOs.Product;
+using OmPlatform.Models;
 
 namespace OmPlatform.Controllers
 {
@@ -8,21 +11,21 @@ namespace OmPlatform.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly ILogger<ProductsController> _logger;
+        private readonly DbAppContext _context;
 
-        public ProductsController(ILogger<ProductsController> logger)
+        public ProductsController(DbAppContext context, ILogger<ProductsController> logger)
         {
+            _context = context;
             _logger = logger;
         }
 
+
         [HttpGet]
-        public IEnumerable<GetProductDto> GetList()
+        public async Task<ActionResult<IEnumerable<Products>>> GetList()
         {
-            return new List<GetProductDto>
-            {
-                new GetProductDto { Id = 1, Name = "Product 1", Price = 100, Stock = 1 },
-                new GetProductDto { Id = 2, Name = "Product 2", Price = 200, Stock = 1 }
-            };
+            return await _context.Products.ToListAsync();
         }
+
 
         [HttpGet("{id}")]
         public ActionResult<GetProductDto> GetById(int id)
@@ -31,15 +34,19 @@ namespace OmPlatform.Controllers
             return Ok(product);
         }
 
+
         [HttpPost]
-        public ActionResult Create([FromBody] CreateProductDto createProductDto)
+        public async Task<ActionResult<Products>> Post(Products product)
         {
-            _logger.LogInformation($"Product created: {createProductDto.Name}");
-            return CreatedAtAction(nameof(GetById), new { id = 1 }, createProductDto);
+            _context.Products.Add(product);
+            _logger.LogInformation($"Product {product.Id} created: {product.Name}");
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetList), new { id = product.Id }, product);
         }
 
+
         [HttpPut("{id}")]
-        public ActionResult Update(int id, [FromBody] UpdateProductDto updateProductDto)
+        public async Task<ActionResult<Products>> Update(int id, [FromBody] UpdateProductDto updateProductDto)
         {
             _logger.LogInformation($"Product {id} updated: {updateProductDto.Name}");
             return NoContent();
