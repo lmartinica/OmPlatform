@@ -30,11 +30,17 @@ namespace OmPlatform.Repositories
             return user;
         }
 
-        public async Task<Users> Update(Users user)
+        public async Task<Users?> Update(Users user)
         {
-            _context.Entry(user).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return user;
+            var userFound = await _context.Users.FindAsync(user.Id);
+            if (userFound != null)
+            {
+                _context.Entry(userFound).State = EntityState.Detached;
+                _context.Entry(user).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return user;
+            }
+            return null;
         }
 
         public async Task Delete(Guid id)

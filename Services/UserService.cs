@@ -30,12 +30,11 @@ namespace OmPlatform.Services
             var user = ToModel(userDto);
             var createdUser = await _repository.Create(user);
             return ToGetDto(createdUser);
-
         }
 
-        public async Task<GetUserDto?> Update(UpdateUserDto userDto)
+        public async Task<GetUserDto?> Update(Guid id, UpdateUserDto userDto)
         {
-            var user = ToModel(userDto);
+            var user = ToModel(userDto, id);
             var updatedUser = await _repository.Update(user);
             return updatedUser == null ? null : ToGetDto(updatedUser);
         }
@@ -51,6 +50,10 @@ namespace OmPlatform.Services
             return new GetUserDto
             {
                 // TODO Mapping
+                Id = user.Id,
+                Email = user.Email,
+                Name = user.Name,
+                Role = user.Role
             };
         }
 
@@ -62,7 +65,7 @@ namespace OmPlatform.Services
             };
         }
 
-        private Users ToModel(UpdateUserDto userDto)
+        private Users ToModel(UpdateUserDto userDto, Guid id)
         {
             return new Users
             {

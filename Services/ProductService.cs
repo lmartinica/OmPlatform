@@ -33,9 +33,9 @@ namespace OmPlatform.Services
 
         }
 
-        public async Task<GetProductDto?> Update(UpdateProductDto productDto)
+        public async Task<GetProductDto?> Update(Guid id, UpdateProductDto productDto)
         {
-            var product = ToModel(productDto);
+            var product = ToModel(productDto, id);
             var updatedProduct = await _repository.Update(product);
             return updatedProduct == null ? null : ToGetDto(updatedProduct);
         }
@@ -50,7 +50,12 @@ namespace OmPlatform.Services
         {
             return new GetProductDto
             {
-                // TODO Mapping
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                Stock = product.Stock,
+                Category = product.Category
             };
         }
 
@@ -58,15 +63,24 @@ namespace OmPlatform.Services
         {
             return new Products
             {
-                // TODO Mapping
+                Name = productDto.Name,
+                Description = productDto.Description,
+                Price = productDto.Price,
+                Stock = productDto.Stock,
+                Category = productDto.Category
             };
         }
 
-        private Products ToModel(UpdateProductDto productDto)
+        private Products ToModel(UpdateProductDto productDto, Guid id)
         {
             return new Products
             {
-                // TODO Mapping
+                Id = id,
+                Name = productDto.Name,
+                Description = productDto.Description,
+                Price = productDto.Price,
+                Stock = productDto.Stock,
+                Category = productDto.Category
             };
         }
     }
