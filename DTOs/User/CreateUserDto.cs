@@ -1,6 +1,6 @@
 ﻿namespace OmPlatform.DTOs.User
 {
-    public class GetUserDto
+    public class CreateUserDto
     {
 
     }

@@ -1,6 +1,6 @@
 ﻿namespace OmPlatform.DTOs.Order
 {
-    public class GetOrderDto
+    public class CreateOrderDto
     {
         
     }
