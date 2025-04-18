@@ -1,12 +1,12 @@
-@OmPlatform_HostAddress = http://localhost:5223
+@Url = http://localhost:5223
 
-GET {{OmPlatform_HostAddress}}/products/
+GET {{Url}}/products/
 Accept: application/json
 ###
 
-GET {{OmPlatform_HostAddress}}/products/
+GET {{Url}}/products/
 Accept: application/json
 ###
 
-GET {{OmPlatform_HostAddress}}/products/
+GET {{Url}}/products/
 Accept: application/json
