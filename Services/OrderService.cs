@@ -33,9 +33,9 @@ namespace OmPlatform.Services
 
         }
 
-        public async Task<GetOrderDto?> Update(UpdateOrderDto orderDto)
+        public async Task<GetOrderDto?> Update(Guid id, UpdateOrderDto orderDto)
         {
-            var order = ToModel(orderDto);
+            var order = ToModel(orderDto, id);
             var updatedOrder = await _repository.Update(order);
             return updatedOrder == null ? null : ToGetDto(updatedOrder);
         }
@@ -51,6 +51,11 @@ namespace OmPlatform.Services
             return new GetOrderDto
             {
                 // TODO Mapping
+                Id = order.Id,
+                TotalPrice = order.TotalPrice,
+                Status = order.Status,
+                Created = order.Created,
+                Items = null
             };
         }
 
@@ -62,7 +67,7 @@ namespace OmPlatform.Services
             };
         }
 
-        private Orders ToModel(UpdateOrderDto orderDto)
+        private Orders ToModel(UpdateOrderDto orderDto, Guid id)
         {
             return new Orders
             {

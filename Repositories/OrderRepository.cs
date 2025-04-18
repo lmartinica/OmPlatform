@@ -30,11 +30,17 @@ namespace OmPlatform.Repositories
             return order;
         }
 
-        public async Task<Orders> Update(Orders order)
+        public async Task<Orders?> Update(Orders order)
         {
-            _context.Entry(order).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-            return order;
+            var orderFound = await _context.Products.FindAsync(order.Id);
+            if (orderFound != null)
+            {
+                _context.Entry(orderFound).State = EntityState.Detached;
+                _context.Entry(order).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return order;
+            }
+            return null;
         }
 
         public async Task Delete(Guid id)
