@@ -56,9 +56,12 @@ namespace OmPlatform.Services
             return updatedUser == null ? null : ToGetDto(updatedUser);
         }
 
-        public async Task Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            await _repository.Delete(id);
+            var user = await _repository.GetById(id);
+            if (user == null) return false;
+            await _repository.Delete(user);
+            return true;
         }
 
         private GetUserDto ToGetDto(Users user)

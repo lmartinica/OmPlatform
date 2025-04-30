@@ -10,6 +10,6 @@ namespace OmPlatform.Repositories
         Task<Users?> GetByEmail(string email);
         Task<Users> Create(Users user);
         Task<Users?> Update(Users user);
-        Task Delete(Guid id);
+        Task Delete(Users user);
     }
 }

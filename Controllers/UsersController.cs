@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OmPlatform.DTOs.Product;
 using OmPlatform.DTOs.User;
+using OmPlatform.Models;
 using OmPlatform.Services;
 
 namespace OmPlatform.Controllers
@@ -30,27 +31,23 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult<GetUserDto>> GetById(Guid id)
         {
             var user = await _userService.GetById(id);
-            if (user == null)
-                return NotFound();
+            if (user == null) return NotFound();
             return Ok(user);
         }
 
         [HttpPatch("{id}")]
         public async Task<ActionResult<GetUserDto>> Update(Guid id, UpdateUserDto userDto)
         {
-            var updatedUser = await _userService.Update(id, userDto);
-            if (updatedUser == null)
-                return NotFound();
-            return Ok(updatedUser);
+            var user = await _userService.Update(id, userDto);
+            if (user == null) return NotFound();
+            return Ok(user);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {
-            // TODO
-            await _userService.Delete(id);
-            //if (!product)
-            //    return NotFound();
+            var result = await _userService.Delete(id);
+            if (!result) return NotFound();
             return NoContent();
         }
     }

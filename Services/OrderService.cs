@@ -40,11 +40,13 @@ namespace OmPlatform.Services
             return updatedOrder == null ? null : ToGetDto(updatedOrder);
         }
 
-        public async Task Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            await _repository.Delete(id);
+            var order = await _repository.GetById(id);
+            if (order == null) return false;
+            await _repository.Delete(order);
+            return true;
         }
-
 
         private GetOrderDto ToGetDto(Orders order)
         {
