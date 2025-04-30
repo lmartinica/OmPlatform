@@ -6,6 +6,8 @@ namespace OmPlatform.Services
     {
         Task<IEnumerable<GetUserDto>> GetAll();
         Task<GetUserDto?> GetById(Guid id);
+        Task<GetUserDto?> GetByEmailAndPassword(string email, string password);
+        Task<GetUserDto?> GetByEmail(string email);
         Task<GetUserDto> Create(CreateUserDto userDto);
         Task<GetUserDto?> Update(Guid id, UpdateUserDto userDto);
         Task Delete(Guid id);

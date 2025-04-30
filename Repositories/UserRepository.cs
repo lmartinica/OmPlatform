@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using OmPlatform.Core;
 using OmPlatform.Models;
 
@@ -21,6 +22,21 @@ namespace OmPlatform.Repositories
         public async Task<Users?> GetById(Guid id)
         {
             return await _context.Users.FindAsync(id);
+        }
+
+        public async Task<Users?> GetByEmail(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(x => x.Email == email);
+        }
+
+        public async Task<Users?> GetByEmailAndPassword(string email, string password)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x=> x.Email == email);
+            if (user == null) return null;
+
+            var hasher = new PasswordHasher<object>();
+            var result = hasher.VerifyHashedPassword(user, user.Password, password);
+            return result == PasswordVerificationResult.Success ? user : null;
         }
 
         public async Task<Users> Create(Users user)

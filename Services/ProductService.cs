@@ -35,6 +35,9 @@ namespace OmPlatform.Services
 
         public async Task<GetProductDto?> Update(Guid id, UpdateProductDto productDto)
         {
+            // TODO: Review model conversion update here
+            // Take entity from database model not bussiness logic
+            // Validare in bussiness layer
             var product = ToModel(productDto, id);
             var updatedProduct = await _repository.Update(product);
             return updatedProduct == null ? null : ToGetDto(updatedProduct);

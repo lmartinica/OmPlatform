@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OmPlatform.DTOs.Product;
 using OmPlatform.DTOs.User;
@@ -6,6 +7,7 @@ using OmPlatform.Services;
 namespace OmPlatform.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
@@ -16,14 +18,13 @@ namespace OmPlatform.Controllers
             _userService = userService;
         }
 
-
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<GetUserDto>>> GetList()
         {
             var users = await _userService.GetAll();
             return Ok(users);
         }
-
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GetUserDto>> GetById(Guid id)
@@ -32,14 +33,6 @@ namespace OmPlatform.Controllers
             if (user == null)
                 return NotFound();
             return Ok(user);
-        }
-
-
-        [HttpPost]
-        public async Task<ActionResult<GetUserDto>> Post(CreateUserDto userDto)
-        {
-            var user = await _userService.Create(userDto);
-            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
         }
 
         [HttpPatch("{id}")]

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OmPlatform.DTOs.Order;
 using OmPlatform.Services;
@@ -5,6 +6,7 @@ using OmPlatform.Services;
 namespace OmPlatform.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class OrdersController : ControllerBase
     {
@@ -15,14 +17,12 @@ namespace OmPlatform.Controllers
             _orderService = orderService;
         }
 
-
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetOrderDto>>> GetList()
         {
             var orders = await _orderService.GetAll();
             return Ok(orders);
         }
-
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GetOrderDto>> GetById(Guid id)
@@ -32,7 +32,6 @@ namespace OmPlatform.Controllers
                 return NotFound();
             return Ok(order);
         }
-
 
         [HttpPost]
         public async Task<ActionResult<GetOrderDto>> Post(CreateOrderDto orderDto)
