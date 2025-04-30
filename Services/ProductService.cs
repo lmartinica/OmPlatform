@@ -30,24 +30,26 @@ namespace OmPlatform.Services
             var product = ToModel(productDto);
             var createdProduct = await _repository.Create(product);
             return ToGetDto(createdProduct);
-
         }
 
         public async Task<GetProductDto?> Update(Guid id, UpdateProductDto productDto)
         {
-            // TODO: Review model conversion update here
-            // Take entity from database model not bussiness logic
-            // Validare in bussiness layer
-            var product = ToModel(productDto, id);
-            var updatedProduct = await _repository.Update(product);
-            return updatedProduct == null ? null : ToGetDto(updatedProduct);
+            var product = await _repository.GetById(id);
+            if (product == null) return null;
+            // TODO: Map productDto to product
+            product.Price = productDto.Price;
+
+            await _repository.Update();
+            return ToGetDto(product);
         }
 
-        public async Task Delete(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            await _repository.Delete(id);
+            var product = await _repository.GetById(id);
+            if (product == null) return false;
+            await _repository.Delete(product);
+            return true;
         }
-
 
         private GetProductDto ToGetDto(Products product)
         {

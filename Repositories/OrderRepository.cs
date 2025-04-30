@@ -43,14 +43,10 @@ namespace OmPlatform.Repositories
             return null;
         }
 
-        public async Task Delete(Guid id)
+        public async Task Delete(Orders order)
         {
-            var order = await _context.Orders.FindAsync(id);
-            if (order != null)
-            {
-                _context.Orders.Remove(order);
-                await _context.SaveChangesAsync();
-            }
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
         }
     }
 }

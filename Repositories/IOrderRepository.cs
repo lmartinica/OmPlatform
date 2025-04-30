@@ -8,6 +8,6 @@ namespace OmPlatform.Repositories
         Task<Orders?> GetById(Guid id);
         Task<Orders> Create(Orders order);
         Task<Orders?> Update(Orders order);
-        Task Delete(Guid id);
+        Task Delete(Orders order);
     }
 }

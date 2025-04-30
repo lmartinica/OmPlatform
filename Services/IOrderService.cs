@@ -8,6 +8,6 @@ namespace OmPlatform.Services
         Task<GetOrderDto?> GetById(Guid id);
         Task<GetOrderDto> Create(CreateOrderDto orderDto);
         Task<GetOrderDto?> Update(Guid id, UpdateOrderDto orderDto);
-        Task Delete(Guid id);
+        Task<bool> Delete(Guid id);
     }
 }

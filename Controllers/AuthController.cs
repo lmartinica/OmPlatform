@@ -44,8 +44,8 @@ namespace OmPlatform.Controllers
         {
             var user = await _userService.GetByEmail(createUserDto.Email);
             if (user != null) return Unauthorized();
-            var newUser = _userService.Create(createUserDto);
-            return Created("register", newUser);
+            var newUser = await _userService.Create(createUserDto);
+            return Created($"/users/{newUser.Id}", newUser);
         }
 
         private string GenerateJwtToken(GetUserDto user)

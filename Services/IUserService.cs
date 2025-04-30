@@ -10,6 +10,6 @@ namespace OmPlatform.Services
         Task<GetUserDto?> GetByEmail(string email);
         Task<GetUserDto> Create(CreateUserDto userDto);
         Task<GetUserDto?> Update(Guid id, UpdateUserDto userDto);
-        Task Delete(Guid id);
+        Task<bool> Delete(Guid id);
     }
 }

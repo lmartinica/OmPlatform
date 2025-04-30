@@ -7,7 +7,7 @@ namespace OmPlatform.Repositories
         Task<IEnumerable<Products>> GetAll();
         Task<Products?> GetById(Guid id);
         Task<Products> Create(Products product);
-        Task<Products?> Update(Products product);
-        Task Delete(Guid id);
+        Task Update();
+        Task Delete(Products product);
     }
 }

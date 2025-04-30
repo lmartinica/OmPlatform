@@ -31,28 +31,15 @@ namespace OmPlatform.Repositories
             return product;
         }
 
-        public async Task<Products?> Update(Products product)
+        public async Task Update()
         {
-            var productFound = await _context.Products.FindAsync(product.Id);
-            if (productFound != null)
-            {
-                // TODO: state nu trebuie modificat, trimite eroare chat
-                _context.Entry(productFound).State = EntityState.Detached;
-                _context.Entry(product).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return product;
-            }
-            return null;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task Delete(Guid id)
+        public async Task Delete(Products product)
         {
-            var product = await _context.Products.FindAsync(id);
-            if (product != null)
-            {
-                _context.Products.Remove(product);
-                await _context.SaveChangesAsync();
-            }
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
         }
     }
 }

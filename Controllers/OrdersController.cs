@@ -28,8 +28,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult<GetOrderDto>> GetById(Guid id)
         {
             var order = await _orderService.GetById(id);
-            if (order == null)
-                return NotFound();
+            if (order == null) return NotFound();
             return Ok(order);
         }
 
@@ -37,25 +36,22 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult<GetOrderDto>> Post(CreateOrderDto orderDto)
         {
             var order = await _orderService.Create(orderDto);
-            return CreatedAtAction(nameof(GetById), new { id = order.Id }, order);
+            return Created($"/orders/{order.Id}", order);
         }
 
         [HttpPatch("{id}")]
         public async Task<ActionResult<GetOrderDto>> Update(Guid id, UpdateOrderDto orderDto)
         {
-            var updatedOrder = await _orderService.Update(id, orderDto);
-            if (updatedOrder == null)
-                return NotFound();
-            return Ok(updatedOrder);
+            var order = await _orderService.Update(id, orderDto);
+            if (order == null) return NotFound();
+            return Ok(order);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {
-            // TODO
-            await _orderService.Delete(id);
-            //if (!product)
-            //    return NotFound();
+            var result = await _orderService.Delete(id);
+            if (!result) return NotFound();
             return NoContent();
         }
     }
