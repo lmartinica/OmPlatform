@@ -36,6 +36,7 @@ namespace OmPlatform.Repositories
             var productFound = await _context.Products.FindAsync(product.Id);
             if (productFound != null)
             {
+                // TODO: state nu trebuie modificat, trimite eroare chat
                 _context.Entry(productFound).State = EntityState.Detached;
                 _context.Entry(product).State = EntityState.Modified;
                 await _context.SaveChangesAsync();

@@ -1,4 +1,5 @@
-﻿using OmPlatform.DTOs.User;
+﻿using Microsoft.AspNetCore.Identity;
+using OmPlatform.DTOs.User;
 using OmPlatform.Models;
 using OmPlatform.Repositories;
 
@@ -19,6 +20,18 @@ namespace OmPlatform.Services
             return users.Select(ToGetDto);
         }
 
+        public async Task<GetUserDto?> GetByEmailAndPassword(string email, string password)
+        {
+            var user = await _repository.GetByEmailAndPassword(email, password);
+            return user == null ? null : ToGetDto(user);
+        }
+
+        public async Task<GetUserDto?> GetByEmail(string email)
+        {
+            var user = await _repository.GetByEmail(email);
+            return user == null ? null : ToGetDto(user);
+        }
+
         public async Task<GetUserDto?> GetById(Guid id)
         {
             var user = await _repository.GetById(id);
@@ -28,6 +41,10 @@ namespace OmPlatform.Services
         public async Task<GetUserDto> Create(CreateUserDto userDto)
         {
             var user = ToModel(userDto);
+
+            var hasher = new PasswordHasher<object>();
+            user.Password = hasher.HashPassword(user, user.Password);
+
             var createdUser = await _repository.Create(user);
             return ToGetDto(createdUser);
         }
@@ -44,12 +61,10 @@ namespace OmPlatform.Services
             await _repository.Delete(id);
         }
 
-
         private GetUserDto ToGetDto(Users user)
         {
             return new GetUserDto
             {
-                // TODO Mapping
                 Id = user.Id,
                 Email = user.Email,
                 Name = user.Name,
@@ -61,7 +76,10 @@ namespace OmPlatform.Services
         {
             return new Users
             {
-                // TODO Mapping
+                Email = userDto.Email,
+                Name = userDto.Name,
+                Password = userDto.Password,
+                Role = "User"
             };
         }
 

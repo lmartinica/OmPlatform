@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OmPlatform.Core;
@@ -8,6 +9,7 @@ using OmPlatform.Services;
 namespace OmPlatform.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class ProductsController : ControllerBase
     {
@@ -18,14 +20,12 @@ namespace OmPlatform.Controllers
             _productService = productService;
         }
 
-
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetProductDto>>> GetList()
         {
             var products = await _productService.GetAll();
             return Ok(products);
         }
-
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GetProductDto>> GetById(Guid id)
@@ -36,15 +36,16 @@ namespace OmPlatform.Controllers
             return Ok(product);
         }
 
-
         [HttpPost]
-        public async Task<ActionResult<GetProductDto>> Post(CreateProductDto productDto)
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<GetProductDto>> Post(CreateProductDto productDto)
         {
             var product = await _productService.Create(productDto);
             return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
         }
 
         [HttpPatch("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<GetProductDto>> Update(Guid id, UpdateProductDto productDto)
         {
             var updatedProduct = await _productService.Update(id, productDto);
@@ -54,6 +55,7 @@ namespace OmPlatform.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(Guid id)
         {
             // TODO
