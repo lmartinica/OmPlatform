@@ -6,7 +6,7 @@ namespace OmPlatform.Services
     {
         Task<IEnumerable<GetOrderDto>> GetAll();
         Task<GetOrderDto?> GetById(Guid id);
-        Task<GetOrderDto> Create(CreateOrderDto orderDto);
+        Task<GetOrderDto> Create(CreateOrderDto orderDto, Guid userId);
         Task<GetOrderDto?> Update(Guid id, UpdateOrderDto orderDto);
         Task<bool> Delete(Guid id);
     }
