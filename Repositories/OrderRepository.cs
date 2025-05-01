@@ -15,12 +15,18 @@ namespace OmPlatform.Repositories
 
         public async Task<IEnumerable<Orders>> GetAll()
         {
-            return await _context.Orders.ToListAsync();
+            return await _context.Orders
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Product)
+                .ToListAsync();
         }
 
         public async Task<Orders?> GetById(Guid id)
         {
-            return await _context.Orders.FindAsync(id);
+            return await _context.Orders
+                .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Product)
+                .FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<Orders> Create(Orders order)
@@ -30,17 +36,9 @@ namespace OmPlatform.Repositories
             return order;
         }
 
-        public async Task<Orders?> Update(Orders order)
+        public async Task Update()
         {
-            var orderFound = await _context.Products.FindAsync(order.Id);
-            if (orderFound != null)
-            {
-                _context.Entry(orderFound).State = EntityState.Detached;
-                _context.Entry(order).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-                return order;
-            }
-            return null;
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(Orders order)

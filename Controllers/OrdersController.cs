@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OmPlatform.DTOs.Order;
 using OmPlatform.Services;
+using System.Security.Claims;
 
 namespace OmPlatform.Controllers
 {
@@ -35,7 +36,11 @@ namespace OmPlatform.Controllers
         [HttpPost]
         public async Task<ActionResult<GetOrderDto>> Post(CreateOrderDto orderDto)
         {
-            var order = await _orderService.Create(orderDto);
+            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!Guid.TryParse(userIdString, out var userId))
+                return Unauthorized("Invalid user ID in token.");
+
+            var order = await _orderService.Create(orderDto, userId);
             return Created($"/orders/{order.Id}", order);
         }
 

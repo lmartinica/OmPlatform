@@ -9,7 +9,7 @@ namespace OmPlatform.Repositories
         Task<Users?> GetByEmailAndPassword(string email, string password);
         Task<Users?> GetByEmail(string email);
         Task<Users> Create(Users user);
-        Task<Users?> Update(Users user);
+        Task Update();
         Task Delete(Users user);
     }
 }

@@ -1,4 +1,5 @@
-﻿using OmPlatform.DTOs.Order;
+﻿using OmPlatform.Core;
+using OmPlatform.DTOs.Order;
 using OmPlatform.Models;
 using OmPlatform.Repositories;
 
@@ -16,28 +17,39 @@ namespace OmPlatform.Services
         public async Task<IEnumerable<GetOrderDto>> GetAll()
         {
             var orders = await _repository.GetAll();
-            return orders.Select(ToGetDto);
+            return orders.Select(Mapper.ToOrderDto);
         }
 
         public async Task<GetOrderDto?> GetById(Guid id)
         {
             var order = await _repository.GetById(id);
-            return order == null ? null : ToGetDto(order);
+            return order == null ? null : Mapper.ToOrderDto(order);
         }
 
-        public async Task<GetOrderDto> Create(CreateOrderDto orderDto)
+        public async Task<GetOrderDto> Create(CreateOrderDto orderDto, Guid userId)
         {
-            var order = ToModel(orderDto);
-            var createdOrder = await _repository.Create(order);
-            return ToGetDto(createdOrder);
+            var order = Mapper.ToOrder(orderDto);
 
+            order.UserId = userId;
+            order.Created = DateTime.UtcNow;
+            order.Status = 0;
+
+            // TODO:
+            // Validate stock availability
+            // Reduce the stock accordingly.
+            // Total price, and order status (Pending, Shipped, Delivered, Canceled).
+
+            var createdOrder = await _repository.Create(order);
+            return Mapper.ToOrderDto(createdOrder);
         }
 
         public async Task<GetOrderDto?> Update(Guid id, UpdateOrderDto orderDto)
         {
-            var order = ToModel(orderDto, id);
-            var updatedOrder = await _repository.Update(order);
-            return updatedOrder == null ? null : ToGetDto(updatedOrder);
+            var order = await _repository.GetById(id);
+            if (order == null) return null;
+            Mapper.UpdateOrder(orderDto, order);
+            await _repository.Update();
+            return Mapper.ToOrderDto(order);
         }
 
         public async Task<bool> Delete(Guid id)
@@ -46,35 +58,6 @@ namespace OmPlatform.Services
             if (order == null) return false;
             await _repository.Delete(order);
             return true;
-        }
-
-        private GetOrderDto ToGetDto(Orders order)
-        {
-            return new GetOrderDto
-            {
-                // TODO Mapping
-                Id = order.Id,
-                TotalPrice = order.TotalPrice,
-                Status = order.Status,
-                Created = order.Created,
-                Items = null
-            };
-        }
-
-        private Orders ToModel(CreateOrderDto orderDto)
-        {
-            return new Orders
-            {
-                // TODO Mapping
-            };
-        }
-
-        private Orders ToModel(UpdateOrderDto orderDto, Guid id)
-        {
-            return new Orders
-            {
-                // TODO Mapping
-            };
         }
     }
 }

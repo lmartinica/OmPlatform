@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using OmPlatform.Core;
 using OmPlatform.DTOs.User;
 using OmPlatform.Models;
 using OmPlatform.Repositories;
@@ -17,43 +18,46 @@ namespace OmPlatform.Services
         public async Task<IEnumerable<GetUserDto>> GetAll()
         {
             var users = await _repository.GetAll();
-            return users.Select(ToGetDto);
+            return users.Select(Mapper.ToUserDto);
         }
 
         public async Task<GetUserDto?> GetByEmailAndPassword(string email, string password)
         {
             var user = await _repository.GetByEmailAndPassword(email, password);
-            return user == null ? null : ToGetDto(user);
+            return user == null ? null : Mapper.ToUserDto(user);
         }
 
         public async Task<GetUserDto?> GetByEmail(string email)
         {
             var user = await _repository.GetByEmail(email);
-            return user == null ? null : ToGetDto(user);
+            return user == null ? null : Mapper.ToUserDto(user);
         }
 
         public async Task<GetUserDto?> GetById(Guid id)
         {
             var user = await _repository.GetById(id);
-            return user == null ? null : ToGetDto(user);
+            return user == null ? null : Mapper.ToUserDto(user);
         }
 
         public async Task<GetUserDto> Create(CreateUserDto userDto)
         {
-            var user = ToModel(userDto);
+            var user = Mapper.ToUser(userDto);
+            user.Role = "User";
 
             var hasher = new PasswordHasher<object>();
             user.Password = hasher.HashPassword(user, user.Password);
 
             var createdUser = await _repository.Create(user);
-            return ToGetDto(createdUser);
+            return Mapper.ToUserDto(createdUser);
         }
 
         public async Task<GetUserDto?> Update(Guid id, UpdateUserDto userDto)
         {
-            var user = ToModel(userDto, id);
-            var updatedUser = await _repository.Update(user);
-            return updatedUser == null ? null : ToGetDto(updatedUser);
+            var user = await _repository.GetById(id);
+            if (user == null) return null;
+            Mapper.UpdateUser(userDto, user);
+            await _repository.Update();
+            return Mapper.ToUserDto(user);
         }
 
         public async Task<bool> Delete(Guid id)
@@ -62,36 +66,6 @@ namespace OmPlatform.Services
             if (user == null) return false;
             await _repository.Delete(user);
             return true;
-        }
-
-        private GetUserDto ToGetDto(Users user)
-        {
-            return new GetUserDto
-            {
-                Id = user.Id,
-                Email = user.Email,
-                Name = user.Name,
-                Role = user.Role
-            };
-        }
-
-        private Users ToModel(CreateUserDto userDto)
-        {
-            return new Users
-            {
-                Email = userDto.Email,
-                Name = userDto.Name,
-                Password = userDto.Password,
-                Role = "User"
-            };
-        }
-
-        private Users ToModel(UpdateUserDto userDto, Guid id)
-        {
-            return new Users
-            {
-                // TODO Mapping
-            };
         }
     }
 }

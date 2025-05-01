@@ -14,14 +14,34 @@ namespace OmPlatform.Core
         {
             _configuration = configuration;
         }
-
-        // TODO: check required columns, nvarchar(50)
-
         public DbSet<Users> Users { get; set; }
         public DbSet<Products> Products { get; set; }
         public DbSet<Orders> Orders { get; set; }
         public DbSet<OrderItems> OrderItems { get; set; }
 
+        // TODO: check required columns, nvarchar(50)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // One to Many (User - Orders)
+            modelBuilder.Entity<Orders>()
+                .HasOne(o => o.User)
+                .WithMany(u => u.Orders)
+                .HasForeignKey(o => o.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Many to Many (OrderItems - Products & Orders)
+            modelBuilder.Entity<OrderItems>()
+                .HasOne(oi => oi.Order)
+                .WithMany(o => o.OrderItems)
+                .HasForeignKey(oi => oi.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<OrderItems>()
+                .HasOne(oi => oi.Product)
+                .WithMany(p => p.OrderItems)
+                .HasForeignKey(oi => oi.ProductId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
     }
