@@ -1,23 +1,32 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Memory;
 using OmPlatform.Core;
 using OmPlatform.DTOs.User;
 using OmPlatform.Models;
 using OmPlatform.Repositories;
+using System.Collections.Generic;
 
 namespace OmPlatform.Services
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository _repository;
+        private readonly IMemoryCache _cache;
+        private readonly string _cacheName = "users";
 
-        public UserService(IUserRepository repository)
+        public UserService(IUserRepository repository, IMemoryCache cache)
         {
             _repository = repository;
+            _cache = cache;
         }
 
         public async Task<IEnumerable<GetUserDto>> GetAll()
         {
-            var users = await _repository.GetAll();
+            var users = await _cache.GetOrCreateAsync(_cacheName, async entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+                return await _repository.GetAll();
+            });
             return users.Select(Mapper.ToUserDto);
         }
 
@@ -48,6 +57,7 @@ namespace OmPlatform.Services
             user.Password = hasher.HashPassword(user, user.Password);
 
             var createdUser = await _repository.Create(user);
+            _cache.Remove(_cacheName);
             return Mapper.ToUserDto(createdUser);
         }
 
@@ -57,6 +67,7 @@ namespace OmPlatform.Services
             if (user == null) return null;
             Mapper.UpdateUser(userDto, user);
             await _repository.Update();
+            _cache.Remove(_cacheName);
             return Mapper.ToUserDto(user);
         }
 
@@ -65,6 +76,7 @@ namespace OmPlatform.Services
             var user = await _repository.GetById(id);
             if (user == null) return false;
             await _repository.Delete(user);
+            _cache.Remove(_cacheName);
             return true;
         }
     }

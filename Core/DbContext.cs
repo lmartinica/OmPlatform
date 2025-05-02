@@ -22,6 +22,13 @@ namespace OmPlatform.Core
         // TODO: check required columns, nvarchar(50)
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Index foreign key
+            modelBuilder.Entity<Orders>().HasIndex(o => o.UserId);
+            modelBuilder.Entity<OrderItems>().HasIndex(oi => oi.ProductId);
+            modelBuilder.Entity<OrderItems>().HasIndex(oi => oi.OrderId);
+            // Index filtering
+            modelBuilder.Entity<Products>().HasIndex(oi => oi.Category);
+
             // One to Many (User - Orders)
             modelBuilder.Entity<Orders>()
                 .HasOne(o => o.User)
