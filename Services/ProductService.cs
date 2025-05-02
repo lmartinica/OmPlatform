@@ -1,4 +1,5 @@
-﻿using OmPlatform.Core;
+﻿using Microsoft.Extensions.Caching.Memory;
+using OmPlatform.Core;
 using OmPlatform.DTOs.Product;
 using OmPlatform.Models;
 using OmPlatform.Repositories;
@@ -8,15 +9,22 @@ namespace OmPlatform.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _repository;
+        private readonly IMemoryCache _cache;
+        private readonly string _cacheName = "products";
 
-        public ProductService(IProductRepository repository)
+        public ProductService(IProductRepository repository, IMemoryCache cache)
         {
             _repository = repository;
+            _cache = cache;
         }
 
         public async Task<IEnumerable<GetProductDto>> GetAll()
         {
-            var products = await _repository.GetAll();
+            var products = await _cache.GetOrCreateAsync(_cacheName, async entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+                return await _repository.GetAll();
+            });
             return products.Select(Mapper.ToProductDto);
         }
 
@@ -30,6 +38,7 @@ namespace OmPlatform.Services
         {
             var product = Mapper.ToProduct(productDto);
             var createdProduct = await _repository.Create(product);
+            _cache.Remove(_cacheName);
             return Mapper.ToProductDto(createdProduct);
         }
 
@@ -39,6 +48,7 @@ namespace OmPlatform.Services
             if (product == null) return null;
             Mapper.UpdateProduct(productDto, product);
             await _repository.Update();
+            _cache.Remove(_cacheName);
             return Mapper.ToProductDto(product);
         }
 
@@ -47,6 +57,7 @@ namespace OmPlatform.Services
             var product = await _repository.GetById(id);
             if (product == null) return false;
             await _repository.Delete(product);
+            _cache.Remove(_cacheName);
             return true;
         }
     }

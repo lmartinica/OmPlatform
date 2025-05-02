@@ -28,6 +28,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddAuthorization();
 
 // Add repositories and services
@@ -39,6 +41,9 @@ builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 
 builder.Services.AddControllers();
