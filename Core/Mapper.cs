@@ -60,7 +60,7 @@ namespace OmPlatform.Core
 
         public static void UpdateUser(UpdateUserDto dto, Users entity)
         {
-            // TODO
+            if (dto.Name != null) entity.Name = dto.Name;
         }
 
         #endregion
@@ -93,7 +93,7 @@ namespace OmPlatform.Core
 
         public static void UpdateOrder(UpdateOrderDto dto, Orders entity)
         {
-            // TODO
+            if (dto.Status != null) entity.Status = dto.Status;
         }
 
         #endregion

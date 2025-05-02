@@ -1,6 +1,4 @@
-﻿using OmPlatform.Models;
-
-namespace OmPlatform.DTOs.Order
+﻿namespace OmPlatform.DTOs.Order
 {
     public class UpdateOrderDto
     {
