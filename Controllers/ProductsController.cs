@@ -21,9 +21,14 @@ namespace OmPlatform.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetProductDto>>> GetList()
+        public async Task<ActionResult<IEnumerable<GetProductDto>>> GetList(
+            [FromQuery] int? minPrice,
+            [FromQuery] int? maxPrice,
+            [FromQuery] bool? stock,
+            [FromQuery] string? category,
+            [FromQuery] string? search)
         {
-            var products = await _productService.GetAll();
+            var products = await _productService.GetList(HttpContext.Request.Query);
             return Ok(products);
         }
 
@@ -37,7 +42,7 @@ namespace OmPlatform.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<GetProductDto>> Post(CreateProductDto productDto)
+        public async Task<ActionResult<GetProductDto>> Post([FromBody] CreateProductDto productDto)
         {
             var product = await _productService.Create(productDto);
             return Created($"/products/{product.Id}", product);
@@ -45,7 +50,7 @@ namespace OmPlatform.Controllers
 
         [HttpPatch("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<GetProductDto>> Update(Guid id, UpdateProductDto productDto)
+        public async Task<ActionResult<GetProductDto>> Update(Guid id, [FromBody] UpdateProductDto productDto)
         {
             var product = await _productService.Update(id, productDto);
             if (product == null) return NotFound();

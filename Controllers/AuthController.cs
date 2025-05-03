@@ -27,7 +27,7 @@ namespace OmPlatform.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login(UserLoginDto userLoginDto)
+        public async Task<ActionResult> Login([FromBody] UserLoginDto userLoginDto)
         {
             var user = await _userService.GetByEmailAndPassword(userLoginDto.Email, userLoginDto.Password);
 
@@ -40,7 +40,7 @@ namespace OmPlatform.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> Register(CreateUserDto createUserDto)
+        public async Task<ActionResult> Register([FromBody] CreateUserDto createUserDto)
         {
             var user = await _userService.GetByEmail(createUserDto.Email);
             if (user != null) return Unauthorized();

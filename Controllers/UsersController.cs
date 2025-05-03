@@ -13,18 +13,28 @@ namespace OmPlatform.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IUserContextService _userContextService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, IUserContextService userContextService)
         {
             _userService = userService;
+            _userContextService = userContextService;
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<GetUserDto>>> GetList()
         {
-            var users = await _userService.GetAll();
+            var users = await _userService.GetList();
             return Ok(users);
+        }
+
+        [HttpGet("me")]
+        public async Task<ActionResult<GetUserDto>> GetMe()
+        {
+            var user = await _userService.GetById(_userContextService.GetUserId());
+            if (user == null) return NotFound();
+            return Ok(user);
         }
 
         [HttpGet("{id}")]
@@ -36,7 +46,7 @@ namespace OmPlatform.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult<GetUserDto>> Update(Guid id, UpdateUserDto userDto)
+        public async Task<ActionResult<GetUserDto>> Update(Guid id, [FromBody] UpdateUserDto userDto)
         {
             var user = await _userService.Update(id, userDto);
             if (user == null) return NotFound();

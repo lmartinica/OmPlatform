@@ -14,9 +14,9 @@ namespace OmPlatform.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Products>> GetAll()
+        public async Task<IEnumerable<Products>> GetList()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products.OrderBy(p => p.Name).ToListAsync();
         }
 
         public async Task<Products?> GetById(Guid id)

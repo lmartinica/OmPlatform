@@ -13,7 +13,7 @@ namespace OmPlatform.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Orders>> GetAll()
+        public async Task<IEnumerable<Orders>> GetList()
         {
             return await _context.Orders
                 .Include(o => o.OrderItems)
