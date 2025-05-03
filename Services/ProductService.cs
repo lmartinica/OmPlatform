@@ -3,6 +3,8 @@ using OmPlatform.Core;
 using OmPlatform.DTOs.Product;
 using OmPlatform.Models;
 using OmPlatform.Repositories;
+using System.Web;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace OmPlatform.Services
 {
@@ -18,13 +20,42 @@ namespace OmPlatform.Services
             _cache = cache;
         }
 
-        public async Task<IEnumerable<GetProductDto>> GetAll()
+        public async Task<IEnumerable<GetProductDto>> GetList(IQueryCollection queryParams)
         {
-            var products = await _cache.GetOrCreateAsync(_cacheName, async entry =>
+            IEnumerable<Products>? products;
+           
+            products = await _cache.GetOrCreateAsync(_cacheName, async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
-                return await _repository.GetAll();
+                return await _repository.GetList();
             });
+
+            // Apply custom filter
+            if (queryParams != null && products != null)
+            {
+                // filter min price
+                if (int.TryParse(queryParams["minPrice"], out var min))
+                    products = products.Where(p => p.Price >= min);
+
+                // filter max price
+                if (int.TryParse(queryParams["maxPrice"], out var max))
+                    products = products.Where(p => p.Price <= max);
+
+                // filter stock true, include greater than zero, else 0
+                if (bool.TryParse(queryParams["stock"], out var hasStock))
+                    products = hasStock ? 
+                        products.Where(p => p.Stock > 0) : 
+                        products.Where(p => p.Stock == 0);
+
+                // filter category
+                if (!string.IsNullOrWhiteSpace(queryParams["category"]))
+                    products = products.Where(p => p.Category.Equals(queryParams["category"], StringComparison.OrdinalIgnoreCase));
+
+                // Apply binary search on name
+                if (!string.IsNullOrWhiteSpace(queryParams["search"]))
+                    products = ServiceBinarySearch(products, queryParams["search"]);
+            }
+
             return products.Select(Mapper.ToProductDto);
         }
 
@@ -59,6 +90,24 @@ namespace OmPlatform.Services
             await _repository.Delete(product);
             _cache.Remove(_cacheName);
             return true;
+        }
+
+        public IEnumerable<Products> ServiceBinarySearch(IEnumerable<Products> products, string search)
+        {
+            int left = 0;
+            int right = products.Count() - 1;
+
+            while (left <= right)
+            {
+                int mid = left + (right - left) / 2;
+                int compare = string.Compare(products.ElementAt(mid).Name, search, StringComparison.OrdinalIgnoreCase);
+
+                if (compare == 0) return new List<Products> { products.ElementAt(mid) };
+                else if (compare < 0) left = mid + 1;
+                else right = mid - 1;
+            }
+
+            return Enumerable.Empty<Products>();
         }
     }
 }

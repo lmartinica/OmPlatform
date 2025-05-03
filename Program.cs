@@ -33,6 +33,10 @@ builder.Services.AddMemoryCache();
 builder.Services.AddAuthorization();
 
 // Add repositories and services
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUserContextService, UserContextService>();
+
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 

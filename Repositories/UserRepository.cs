@@ -14,7 +14,7 @@ namespace OmPlatform.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Users>> GetAll()
+        public async Task<IEnumerable<Users>> GetList()
         {
             return await _context.Users.ToListAsync();
         }

@@ -21,7 +21,7 @@ namespace OmPlatform.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetOrderDto>>> GetList()
         {
-            var orders = await _orderService.GetAll();
+            var orders = await _orderService.GetList();
             return Ok(orders);
         }
 
@@ -34,18 +34,14 @@ namespace OmPlatform.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<GetOrderDto>> Post(CreateOrderDto orderDto)
+        public async Task<ActionResult<GetOrderDto>> Post([FromBody] CreateOrderDto orderDto)
         {
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!Guid.TryParse(userIdString, out var userId))
-                return Unauthorized("Invalid user ID in token.");
-
-            var order = await _orderService.Create(orderDto, userId);
+            var order = await _orderService.Create(orderDto);
             return Created($"/orders/{order.Id}", order);
         }
 
         [HttpPatch("{id}")]
-        public async Task<ActionResult<GetOrderDto>> Update(Guid id, UpdateOrderDto orderDto)
+        public async Task<ActionResult<GetOrderDto>> Update(Guid id, [FromBody] UpdateOrderDto orderDto)
         {
             var order = await _orderService.Update(id, orderDto);
             if (order == null) return NotFound();

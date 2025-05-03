@@ -11,21 +11,23 @@ namespace OmPlatform.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _repository;
+        private readonly IUserContextService _userContextService;
         private readonly IMemoryCache _cache;
         private readonly string _cacheName = "users";
 
-        public UserService(IUserRepository repository, IMemoryCache cache)
+        public UserService(IUserRepository repository, IUserContextService userContextService, IMemoryCache cache)
         {
             _repository = repository;
+            _userContextService = userContextService;
             _cache = cache;
         }
 
-        public async Task<IEnumerable<GetUserDto>> GetAll()
+        public async Task<IEnumerable<GetUserDto>> GetList()
         {
             var users = await _cache.GetOrCreateAsync(_cacheName, async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
-                return await _repository.GetAll();
+                return await _repository.GetList();
             });
             return users.Select(Mapper.ToUserDto);
         }
@@ -45,7 +47,9 @@ namespace OmPlatform.Services
         public async Task<GetUserDto?> GetById(Guid id)
         {
             var user = await _repository.GetById(id);
-            return user == null ? null : Mapper.ToUserDto(user);
+            if (user == null) return null;
+            if (!_userContextService.IsAllowed(user.Id)) return null;
+            return Mapper.ToUserDto(user);
         }
 
         public async Task<GetUserDto> Create(CreateUserDto userDto)
@@ -65,6 +69,7 @@ namespace OmPlatform.Services
         {
             var user = await _repository.GetById(id);
             if (user == null) return null;
+            if (!_userContextService.IsAllowed(user.Id)) return null;
             Mapper.UpdateUser(userDto, user);
             await _repository.Update();
             _cache.Remove(_cacheName);
@@ -75,6 +80,7 @@ namespace OmPlatform.Services
         {
             var user = await _repository.GetById(id);
             if (user == null) return false;
+            if (!_userContextService.IsAllowed(user.Id)) return false;
             await _repository.Delete(user);
             _cache.Remove(_cacheName);
             return true;

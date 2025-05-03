@@ -10,37 +10,44 @@ namespace OmPlatform.Services
     {
         private readonly IOrderRepository _repository;
         private readonly IProductRepository _productRepository;
+        private readonly IUserContextService _userContextService;
         private readonly IMemoryCache _cache;
         private readonly string _cacheName = "orders";
 
-        public OrderService(IOrderRepository repository, IProductRepository productRepository, IMemoryCache cache)
+        public OrderService(IOrderRepository repository, IProductRepository productRepository, IUserContextService userContextService, IMemoryCache cache)
         {
             _repository = repository;
             _productRepository = productRepository;
+            _userContextService = userContextService;
             _cache = cache;
         }
 
-        public async Task<IEnumerable<GetOrderDto>> GetAll()
+        public async Task<IEnumerable<GetOrderDto>> GetList()
         {
             var orders = await _cache.GetOrCreateAsync(_cacheName, async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
-                return await _repository.GetAll();
+                return await _repository.GetList();
             });
+
+            if (_userContextService.IsUser()) 
+                orders = orders.Where(o => o.UserId == _userContextService.GetUserId());
             return orders.Select(Mapper.ToOrderDto);
         }
 
         public async Task<GetOrderDto?> GetById(Guid id)
         {
             var order = await _repository.GetById(id);
-            return order == null ? null : Mapper.ToOrderDto(order);
+            if (order == null) return null;
+            if (!_userContextService.IsAllowed(order.UserId)) return null;
+            return Mapper.ToOrderDto(order);
         }
 
-        public async Task<GetOrderDto> Create(CreateOrderDto orderDto, Guid userId)
+        public async Task<GetOrderDto> Create(CreateOrderDto orderDto)
         {
             var order = Mapper.ToOrder(orderDto);
 
-            order.UserId = userId;
+            order.UserId = _userContextService.GetUserId();
             order.Created = DateTime.UtcNow;
             order.Status = "Pending";
 
@@ -67,6 +74,7 @@ namespace OmPlatform.Services
         {
             var order = await _repository.GetById(id);
             if (order == null) return null;
+            if (!_userContextService.IsAllowed(order.UserId)) return null;
             Mapper.UpdateOrder(orderDto, order);
             await _repository.Update();
             _cache.Remove(_cacheName);
@@ -77,6 +85,7 @@ namespace OmPlatform.Services
         {
             var order = await _repository.GetById(id);
             if (order == null) return false;
+            if (!_userContextService.IsAllowed(order.UserId)) return false;
             await _repository.Delete(order);
             _cache.Remove(_cacheName);
             return true;
