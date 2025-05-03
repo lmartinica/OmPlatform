@@ -28,6 +28,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddMvc(options =>
+{
+    options.Filters.Add(typeof(FormatErrorsAttribute));
+});
+
 builder.Services.AddMemoryCache();
 
 builder.Services.AddAuthorization();
@@ -55,6 +60,8 @@ builder.Services.AddControllers();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+app.UseMiddleware<ErrorMiddleware>();
 
 app.UseHttpsRedirection();
 
