@@ -9,13 +9,18 @@ namespace OmPlatform.Core
     {
         public override void OnResultExecuting(ResultExecutingContext context)
         {
-            var order = new GetOrderDto();
-            order.OrderItems = new List<GetOrderItemDto>();
-            order.OrderItems.Add(new GetOrderItemDto());
-
+            var errorBody = new
+            {
+                error = new
+                {
+                    status = "test",
+                    message = "test"
+                }
+            };
+          
             // Modify Action results errors
             if (context.Result is BadRequestObjectResult)
-                context.Result = new BadRequestObjectResult(order);
+                context.Result = new BadRequestObjectResult(errorBody);
             else if (context.Result is ObjectResult objectResult)
             {
                 switch (objectResult.StatusCode)

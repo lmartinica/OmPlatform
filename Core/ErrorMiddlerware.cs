@@ -21,6 +21,10 @@
                     context.Response.WriteAsync("TODO");
                 }
             }
+            catch (HttpException httpEx)
+            {
+                context.Response.WriteAsync(httpEx.Message + " " + httpEx.Status);
+            }
             catch (Exception ex)
             {
                 context.Response.WriteAsync("TODO");
