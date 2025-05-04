@@ -5,7 +5,7 @@ VisualStudioVersion = 17.12.35728.132
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OmPlatform", "OmPlatform.csproj", "{63C03D81-C36B-4A8F-BC42-8CDBE04D072B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OmPlatformTest", "..\OmPlatformTest\OmPlatformTest.csproj", "{62A5CB2C-18EC-47BF-A55F-5728B2D7BE09}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OmPlatformTest", "..\OmPlatformTest\OmPlatformTest.csproj", "{645AC30E-A665-2C3F-2642-AA1B8C2BB570}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{63C03D81-C36B-4A8F-BC42-8CDBE04D072B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63C03D81-C36B-4A8F-BC42-8CDBE04D072B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63C03D81-C36B-4A8F-BC42-8CDBE04D072B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{62A5CB2C-18EC-47BF-A55F-5728B2D7BE09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{62A5CB2C-18EC-47BF-A55F-5728B2D7BE09}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{62A5CB2C-18EC-47BF-A55F-5728B2D7BE09}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{62A5CB2C-18EC-47BF-A55F-5728B2D7BE09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{645AC30E-A665-2C3F-2642-AA1B8C2BB570}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{645AC30E-A665-2C3F-2642-AA1B8C2BB570}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{645AC30E-A665-2C3F-2642-AA1B8C2BB570}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{645AC30E-A665-2C3F-2642-AA1B8C2BB570}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
