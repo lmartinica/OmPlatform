@@ -56,9 +56,11 @@ namespace OmPlatform.Services
             {
                 var product = await _productRepository.GetById(item.ProductId);
                 if (product == null) 
-                    throw new Exception($"Product with ID {item.ProductId} not found.");
+                    throw new HttpException(400, $"Product with ID {item.ProductId} not found.");
                 if (product.Stock < item.Quantity) 
-                    throw new Exception($"Not enough stock for product {product.Name}.");
+                    throw new HttpException(400, $"Not enough stock for product {product.Name}.");
+                if (item.Quantity <= 0)
+                    throw new HttpException(400, $"Quantity must be higher than 0 for product {product.Name}.");
 
                 product.Stock -= item.Quantity;
                 await _productRepository.Update();
