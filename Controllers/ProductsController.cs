@@ -28,6 +28,8 @@ namespace OmPlatform.Controllers
             [FromQuery] string? category,
             [FromQuery] string? search)
         {
+
+            // TODO pass FromQuery params instead of IQuery
             var products = await _productService.GetList(HttpContext.Request.Query);
             return Ok(products);
         }
@@ -41,7 +43,7 @@ namespace OmPlatform.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Constants.Admin)]
         public async Task<ActionResult<GetProductDto>> Post([FromBody] CreateProductDto productDto)
         {
             var product = await _productService.Create(productDto);
@@ -49,7 +51,7 @@ namespace OmPlatform.Controllers
         }
 
         [HttpPatch("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Constants.Admin)]
         public async Task<ActionResult<GetProductDto>> Update(Guid id, [FromBody] UpdateProductDto productDto)
         {
             var product = await _productService.Update(id, productDto);
@@ -58,7 +60,7 @@ namespace OmPlatform.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Constants.Admin)]
         public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _productService.Delete(id);

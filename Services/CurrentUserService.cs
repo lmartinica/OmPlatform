@@ -1,13 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
+using OmPlatform.Core;
+using OmPlatform.DTOs.User;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace OmPlatform.Services
 {
-    public class UserContextService : IUserContextService
+    public class CurrentUserService : ICurrentUserService
     {
         private readonly ClaimsPrincipal _user;
 
-        public UserContextService(IHttpContextAccessor httpContextAccessor)
+        public CurrentUserService(IHttpContextAccessor httpContextAccessor)
         {
             _user = httpContextAccessor.HttpContext?.User ?? new ClaimsPrincipal();
         }
@@ -22,7 +27,7 @@ namespace OmPlatform.Services
 
         public bool IsUser()
         {
-            return _user.IsInRole("User");
+            return _user.IsInRole(Constants.User);
         }
         public bool IsAllowed(Guid userId)
         {
@@ -32,7 +37,7 @@ namespace OmPlatform.Services
 
         public bool IsAdmin()
         {
-            return _user.IsInRole("Admin");
+            return _user.IsInRole(Constants.Admin);
         }
     }
 }

@@ -9,7 +9,7 @@ using OmPlatform.Services;
 namespace OmPlatform.Controllers
 {
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = Constants.Admin)]
     [Route("[controller]")]
     public class ReportsController : ControllerBase
     {

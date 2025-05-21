@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OmPlatform.Core;
 using OmPlatform.DTOs.Product;
 using OmPlatform.DTOs.User;
 using OmPlatform.Models;
@@ -13,16 +14,16 @@ namespace OmPlatform.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IUserContextService _userContextService;
+        private readonly ICurrentUserService _currentUserService;
 
-        public UsersController(IUserService userService, IUserContextService userContextService)
+        public UsersController(IUserService userService, ICurrentUserService currentUserService)
         {
             _userService = userService;
-            _userContextService = userContextService;
+            _currentUserService = currentUserService;
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Constants.Admin)]
         public async Task<ActionResult<IEnumerable<GetUserDto>>> GetList()
         {
             var users = await _userService.GetList();
@@ -32,7 +33,7 @@ namespace OmPlatform.Controllers
         [HttpGet("me")]
         public async Task<ActionResult<GetUserDto>> GetMe()
         {
-            var user = await _userService.GetById(_userContextService.GetUserId());
+            var user = await _userService.GetById(_currentUserService.GetUserId());
             if (user == null) return NotFound();
             return Ok(user);
         }

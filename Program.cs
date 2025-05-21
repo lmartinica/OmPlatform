@@ -28,10 +28,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+
 builder.Services.AddMvc(options =>
 {
     options.Filters.Add(typeof(FormatErrorsAttribute));
 });
+
 
 builder.Services.AddMemoryCache();
 
@@ -40,7 +43,10 @@ builder.Services.AddAuthorization();
 // Add repositories and services
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IUserContextService, UserContextService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// TODO check singleton, scope, transient, research inregistrare dependinte
 
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<IOrderService, OrderService>();

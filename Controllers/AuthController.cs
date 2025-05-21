@@ -18,12 +18,12 @@ namespace OmPlatform.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IConfiguration _configuration;
+        private readonly IAuthService _authService;
 
-        public AuthController(IUserService userService, IConfiguration configuration)
+        public AuthController(IUserService userService, IAuthService authService)
         {
             _userService = userService;
-            _configuration = configuration;
+            _authService = authService;
         }
 
         [HttpPost("login")]
@@ -33,7 +33,7 @@ namespace OmPlatform.Controllers
 
             if (user != null)
             {
-                var token = GenerateJwtToken(user);
+                var token = _authService.GenerateJwtToken(user);
                 return Ok(new { token });
             }
             return Unauthorized();
@@ -44,30 +44,9 @@ namespace OmPlatform.Controllers
         {
             var user = await _userService.GetByEmail(createUserDto.Email);
             if (user != null) return Unauthorized();
+            // TODO password valid, min 5 char, min 1 char special, min 1 numar
             var newUser = await _userService.Create(createUserDto);
             return Created($"/users/{newUser.Id}", newUser);
-        }
-
-        private string GenerateJwtToken(GetUserDto user)
-        {
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(60),
-                signingCredentials: creds);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace OmPlatform.Core
         public DbSet<Orders> Orders { get; set; }
         public DbSet<OrderItems> OrderItems { get; set; }
 
-        // TODO: check required columns, nvarchar(50)
+        // TODO add required columns, nvarchar(50)
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Index foreign key
@@ -34,7 +34,9 @@ namespace OmPlatform.Core
                 .HasOne(o => o.User)
                 .WithMany(u => u.Orders)
                 .HasForeignKey(o => o.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade); 
+            
+            // TODO check Audit, better not delete cascade
 
             // Many to Many (OrderItems - Products & Orders)
             modelBuilder.Entity<OrderItems>()

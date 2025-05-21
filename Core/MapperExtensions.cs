@@ -7,11 +7,11 @@ using OmPlatform.Models;
 
 namespace OmPlatform.Core
 {
-    public static class Mapper
+    public static class MapperExtensions
     {
         #region Product
 
-        public static GetProductDto ToProductDto(Products entity) => new()
+        public static GetProductDto ToProductDto(this Products entity) => new()
         {
             Id = entity.Id,
             Name = entity.Name,
@@ -21,7 +21,7 @@ namespace OmPlatform.Core
             Category = entity.Category
         };
 
-        public static Products ToProduct(CreateProductDto dto) => new()
+        public static Products ToProduct(this CreateProductDto dto) => new()
         {
             Name = dto.Name,
             Description = dto.Description,
@@ -30,7 +30,7 @@ namespace OmPlatform.Core
             Category = dto.Category
         };
 
-        public static void UpdateProduct(UpdateProductDto dto, Products entity)
+        public static void UpdateProduct(this UpdateProductDto dto, Products entity)
         {
             if (dto.Name != null) entity.Name = dto.Name;
             if (dto.Description != null) entity.Description = dto.Description;
@@ -43,7 +43,7 @@ namespace OmPlatform.Core
 
         #region User
 
-        public static GetUserDto ToUserDto(Users entity) => new()
+        public static GetUserDto ToUserDto(this Users entity) => new()
         {
             Id = entity.Id,
             Email = entity.Email,
@@ -51,14 +51,14 @@ namespace OmPlatform.Core
             Role = entity.Role
         };
 
-        public static Users ToUser(CreateUserDto dto) => new()
+        public static Users ToUser(this CreateUserDto dto) => new()
         {
             Email = dto.Email,
             Name = dto.Name,
             Password = dto.Password,
         };
 
-        public static void UpdateUser(UpdateUserDto dto, Users entity)
+        public static void UpdateUser(this UpdateUserDto dto, Users entity)
         {
             if (dto.Name != null) entity.Name = dto.Name;
         }
@@ -67,7 +67,7 @@ namespace OmPlatform.Core
 
         #region Order
 
-        public static GetOrderDto ToOrderDto(Orders entity) => new()
+        public static GetOrderDto ToOrderDto(this Orders entity) => new()
         {
             Id = entity.Id,
             UserId = entity.UserId,
@@ -82,7 +82,7 @@ namespace OmPlatform.Core
             }).ToList()
         };
 
-        public static Orders ToOrder(CreateOrderDto dto) => new()
+        public static Orders ToOrder(this CreateOrderDto dto) => new()
         {
             OrderItems = dto.OrderItems.Select(i => new OrderItems
             {
@@ -91,7 +91,7 @@ namespace OmPlatform.Core
             }).ToList()
         };
 
-        public static void UpdateOrder(UpdateOrderDto dto, Orders entity)
+        public static void UpdateOrder(this UpdateOrderDto dto, Orders entity)
         {
             if (dto.Status != null) entity.Status = dto.Status;
         }
