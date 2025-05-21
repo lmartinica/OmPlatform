@@ -2,7 +2,7 @@
 
 namespace OmPlatform.Services
 {
-    public interface IUserContextService
+    public interface ICurrentUserService
     {
         Guid GetUserId();
         bool IsUser();

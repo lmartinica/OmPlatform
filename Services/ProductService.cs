@@ -56,31 +56,34 @@ namespace OmPlatform.Services
                     products = ServiceBinarySearch(products, queryParams["search"]);
             }
 
-            return products.Select(Mapper.ToProductDto);
+            return products.Select(x => x.ToProductDto());
         }
 
         public async Task<GetProductDto?> GetById(Guid id)
         {
             var product = await _repository.GetById(id);
-            return product == null ? null : Mapper.ToProductDto(product);
+            return product == null ? null : product.ToProductDto();
         }
 
         public async Task<GetProductDto> Create(CreateProductDto productDto)
         {
-            var product = Mapper.ToProduct(productDto);
+            var product = productDto.ToProduct();
             var createdProduct = await _repository.Create(product);
             _cache.Remove(_cacheName);
-            return Mapper.ToProductDto(createdProduct);
+            return createdProduct.ToProductDto();
         }
 
         public async Task<GetProductDto?> Update(Guid id, UpdateProductDto productDto)
         {
             var product = await _repository.GetById(id);
             if (product == null) return null;
-            Mapper.UpdateProduct(productDto, product);
+
+            productDto.UpdateProduct(product);
             await _repository.Update();
+
             _cache.Remove(_cacheName);
-            return Mapper.ToProductDto(product);
+
+            return product.ToProductDto();
         }
 
         public async Task<bool> Delete(Guid id)
