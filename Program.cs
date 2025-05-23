@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OmPlatform.Core;
 using OmPlatform.Repositories;
 using OmPlatform.Services;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,12 +32,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
-builder.Services.AddMvc(options =>
-{
-    options.Filters.Add(typeof(FormatErrorsAttribute));
-});
-
-
 builder.Services.AddMemoryCache();
 
 builder.Services.AddAuthorization();
@@ -60,8 +56,13 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddScoped<IReportService, ReportService>();
 
-
-builder.Services.AddControllers();
+// Change default Bad Request error model
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+            new BadRequestObjectResult(new ErrorResponse(400));
+    });
 
 var app = builder.Build();
 

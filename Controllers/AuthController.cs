@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using OmPlatform.Core;
 using OmPlatform.DTOs.Auth;
 using OmPlatform.DTOs.Order;
 using OmPlatform.DTOs.User;
@@ -36,14 +37,14 @@ namespace OmPlatform.Controllers
                 var token = _authService.GenerateJwtToken(user);
                 return Ok(new { token });
             }
-            return Unauthorized();
+            return this.ErrorUnauthorized("Incorrect credentials");
         }
 
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] CreateUserDto createUserDto)
         {
             var user = await _userService.GetByEmail(createUserDto.Email);
-            if (user != null) return Unauthorized();
+            if (user != null) return this.ErrorUnauthorized("Email address already used");
             // TODO password valid, min 5 char, min 1 char special, min 1 numar
             var newUser = await _userService.Create(createUserDto);
             return Created($"/users/{newUser.Id}", newUser);

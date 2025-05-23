@@ -34,7 +34,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult<GetUserDto>> GetMe()
         {
             var user = await _userService.GetById(_currentUserService.GetUserId());
-            if (user == null) return NotFound();
+            if (user == null) return this.ErrorNotFound();
             return Ok(user);
         }
 
@@ -42,7 +42,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult<GetUserDto>> GetById(Guid id)
         {
             var user = await _userService.GetById(id);
-            if (user == null) return NotFound();
+            if (user == null) return this.ErrorNotFound();
             return Ok(user);
         }
 
@@ -50,7 +50,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult<GetUserDto>> Update(Guid id, [FromBody] UpdateUserDto userDto)
         {
             var user = await _userService.Update(id, userDto);
-            if (user == null) return NotFound();
+            if (user == null) return this.ErrorNotFound();
             return Ok(user);
         }
 
@@ -58,7 +58,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _userService.Delete(id);
-            if (!result) return NotFound();
+            if (!result) return this.ErrorNotFound();
             return NoContent();
         }
     }
