@@ -1,4 +1,8 @@
-﻿namespace OmPlatform.Core
+﻿using System.Net;
+using System.Text.Json;
+using System;
+
+namespace OmPlatform.Core
 {
     public class ErrorMiddleware
     {
@@ -18,17 +22,27 @@
                 // Handle 400 and other error status codes
                 if (!context.Response.HasStarted && context.Response.StatusCode >= 400)
                 {
-                    context.Response.WriteAsync("TODO");
+                    await WriteError(context, context.Response.StatusCode);
                 }
             }
-            catch (HttpException httpEx)
+            catch (Exception)
             {
-                context.Response.WriteAsync(httpEx.Message + " " + httpEx.Status);
+                await WriteError(context, 500);
             }
-            catch (Exception ex)
+        }
+
+        private async Task WriteError(HttpContext context, int statusCode)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = statusCode;
+            var errorResponse = new ErrorResponse(statusCode);
+
+            var json = JsonSerializer.Serialize(errorResponse, new JsonSerializerOptions
             {
-                context.Response.WriteAsync("TODO");
-            }
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
+
+            await context.Response.WriteAsync(json);
         }
     }
 }

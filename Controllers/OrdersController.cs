@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using OmPlatform.Core;
 using OmPlatform.DTOs.Order;
 using OmPlatform.Services;
 using System.Security.Claims;
@@ -29,7 +30,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult<GetOrderDto>> GetById(Guid id)
         {
             var order = await _orderService.GetById(id);
-            if (order == null) return NotFound();
+            if (order == null) return this.ErrorNotFound();
             return Ok(order);
         }
 
@@ -44,7 +45,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult<GetOrderDto>> Update(Guid id, [FromBody] UpdateOrderDto orderDto)
         {
             var order = await _orderService.Update(id, orderDto);
-            if (order == null) return NotFound();
+            if (order == null) return this.ErrorNotFound();
             return Ok(order);
         }
 
@@ -52,7 +53,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _orderService.Delete(id);
-            if (!result) return NotFound();
+            if (!result) return this.ErrorNotFound();
             return NoContent();
         }
     }
