@@ -8,12 +8,8 @@ namespace OmPlatform.Core
 {
     public class DbAppContext : DbContext
     {
-        private readonly IConfiguration _configuration;
+        public DbAppContext(DbContextOptions<DbAppContext> options) : base(options){}
 
-        public DbAppContext(DbContextOptions<DbAppContext> options, IConfiguration configuration) : base(options)
-        {
-            _configuration = configuration;
-        }
         public DbSet<Users> Users { get; set; }
         public DbSet<Products> Products { get; set; }
         public DbSet<Orders> Orders { get; set; }
@@ -51,8 +47,5 @@ namespace OmPlatform.Core
                 .HasForeignKey(oi => oi.ProductId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-        => options.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
     }
-
 }
