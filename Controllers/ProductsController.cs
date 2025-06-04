@@ -28,8 +28,7 @@ namespace OmPlatform.Controllers
             [FromQuery] string? category,
             [FromQuery] string? search)
         {
-
-            // TODO pass FromQuery params instead of IQuery
+            // TODO add here ProductQuery productQuery = new() with constructor
             var products = await _productService.GetList(HttpContext.Request.Query);
             return Ok(products);
         }
