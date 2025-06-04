@@ -77,7 +77,6 @@ namespace OmPlatform.Core
             OrderItems = entity.OrderItems.Select(i => new GetOrderItemDto
             {
                 ProductId = i.ProductId,
-                ProductName = i.Product.Name,
                 Quantity = i.Quantity
             }).ToList()
         };

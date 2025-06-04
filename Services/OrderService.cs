@@ -60,9 +60,9 @@ namespace OmPlatform.Services
                 if (product == null) 
                     throw new Exception($"Product with ID {item.ProductId} not found.");
                 if (product.Stock < item.Quantity) 
-                    throw new Exception($"Not enough stock for product {product.Name}.");
+                    throw new Exception($"Not enough stock for product {product.Id}.");
                 if (item.Quantity <= 0)
-                    throw new Exception($"Quantity must be higher than 0 for product {product.Name}.");
+                    throw new Exception($"Quantity must be higher than 0 for product {product.Id}.");
 
                 // TODO update not in loop check (transactions) link unitOfWork
                 product.Stock -= item.Quantity;
