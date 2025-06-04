@@ -57,6 +57,9 @@ namespace OmPlatform.Services
             var user = userDto.ToUser();
             user.Role = Constants.User;
 
+            if (userDto.Password.Length < 5)
+                throw new Exception($"Password too short. It must be at least 5 characters long.");
+
             var hasher = new PasswordHasher<object>();
             user.Password = hasher.HashPassword(user, user.Password);
 

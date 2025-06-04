@@ -45,7 +45,6 @@ namespace OmPlatform.Controllers
         {
             var user = await _userService.GetByEmail(createUserDto.Email);
             if (user != null) return this.ErrorUnauthorized("Email address already used");
-            // TODO password valid, min 5 char, min 1 char special, min 1 numar
             var newUser = await _userService.Create(createUserDto);
             return Created($"/users/{newUser.Id}", newUser);
         }

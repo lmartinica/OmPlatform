@@ -30,16 +30,14 @@ namespace OmPlatform.Core
                 .HasOne(o => o.User)
                 .WithMany(u => u.Orders)
                 .HasForeignKey(o => o.UserId)
-                .OnDelete(DeleteBehavior.Cascade); 
-            
-            // TODO check Audit, better not delete cascade
+                .OnDelete(DeleteBehavior.Restrict); 
 
             // Many to Many (OrderItems - Products & Orders)
             modelBuilder.Entity<OrderItems>()
                 .HasOne(oi => oi.Order)
                 .WithMany(o => o.OrderItems)
                 .HasForeignKey(oi => oi.OrderId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<OrderItems>()
                 .HasOne(oi => oi.Product)
