@@ -43,7 +43,7 @@ namespace OmPlatform.Services
             return order.ToOrderDto();
         }
 
-        public async Task<GetOrderDto> Create(CreateOrderDto orderDto)
+        public async Task<Result<GetOrderDto>> Create(CreateOrderDto orderDto)
         {
             var order = orderDto.ToOrder();
 
@@ -54,15 +54,13 @@ namespace OmPlatform.Services
             // Validate each item stock, reduce the stock.
             foreach (var item in order.OrderItems)
             {
-                // TODO return erroDto, do not return exceptions in service or repository
-
                 var product = await _productRepository.GetById(item.ProductId);
                 if (product == null) 
-                    throw new Exception($"Product with ID {item.ProductId} not found.");
-                if (product.Stock < item.Quantity) 
-                    throw new Exception($"Not enough stock for product {product.Id}.");
+                    return Result<GetOrderDto>.Failure(404, $"Product with ID {item.ProductId} not found.");
+                if (product.Stock < item.Quantity)
+                    return Result<GetOrderDto>.Failure(400, $"Not enough stock for product {product.Id}.");
                 if (item.Quantity <= 0)
-                    throw new Exception($"Quantity must be higher than 0 for product {product.Id}.");
+                    return Result<GetOrderDto>.Failure(400,$"Quantity must be higher than 0 for product {product.Id}.");
 
                 // TODO update not in loop check (transactions) link unitOfWork
                 product.Stock -= item.Quantity;
@@ -73,7 +71,7 @@ namespace OmPlatform.Services
             var createdOrder = await _repository.Create(order);
             // TODO unitOfWork above
             _cache.Remove(_cacheName);
-            return createdOrder.ToOrderDto();
+            return Result<GetOrderDto>.Success(createdOrder.ToOrderDto());
         }
 
         public async Task<GetOrderDto?> Update(Guid id, UpdateOrderDto orderDto)

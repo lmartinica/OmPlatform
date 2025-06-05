@@ -2,6 +2,7 @@
 using OmPlatform.Core;
 using OmPlatform.DTOs.Product;
 using OmPlatform.Models;
+using OmPlatform.Queries;
 using OmPlatform.Repositories;
 using System.Web;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
@@ -20,7 +21,7 @@ namespace OmPlatform.Services
             _cache = cache;
         }
 
-        public async Task<IEnumerable<GetProductDto>> GetList(IQueryCollection queryParams)
+        public async Task<IEnumerable<GetProductDto>> GetList(ProductQuery productQuery)
         {
             IEnumerable<Products>? products;
            
@@ -31,29 +32,29 @@ namespace OmPlatform.Services
             });
 
             // Apply custom filter
-            if (queryParams != null && products != null)
+            if (products != null)
             {
                 // filter min price
-                if (int.TryParse(queryParams["minPrice"], out var min))
-                    products = products.Where(p => p.Price >= min);
+                if (productQuery.MinPrice != null)
+                    products = products.Where(p => p.Price >= productQuery.MinPrice.Value);
 
                 // filter max price
-                if (int.TryParse(queryParams["maxPrice"], out var max))
-                    products = products.Where(p => p.Price <= max);
+                if (productQuery.MaxPrice != null)
+                    products = products.Where(p => p.Price <= productQuery.MaxPrice.Value);
 
                 // filter stock true, include greater than zero, else 0
-                if (bool.TryParse(queryParams["stock"], out var hasStock))
-                    products = hasStock ? 
+                if (productQuery.Stock != null)
+                    products = productQuery.Stock.Value ? 
                         products.Where(p => p.Stock > 0) : 
                         products.Where(p => p.Stock == 0);
 
                 // filter category
-                if (!string.IsNullOrWhiteSpace(queryParams["category"]))
-                    products = products.Where(p => p.Category.Equals(queryParams["category"], StringComparison.OrdinalIgnoreCase));
+                if (productQuery.Category != null)
+                    products = products.Where(p => p.Category.Equals(productQuery.Category, StringComparison.OrdinalIgnoreCase));
 
                 // Apply binary search on name
-                if (!string.IsNullOrWhiteSpace(queryParams["search"]))
-                    products = ServiceBinarySearch(products, queryParams["search"]);
+                if (productQuery.Search != null)
+                    products = ServiceBinarySearch(products, productQuery.Search);
             }
 
             return products.Select(x => x.ToProductDto());

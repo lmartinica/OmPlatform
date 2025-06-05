@@ -4,6 +4,11 @@ namespace OmPlatform.Core
 {
     public static class ErrorExtensions
     {
+        public static ActionResult Error<T>(this ControllerBase controller, Result<T> result)
+        {
+            return controller.StatusCode(result.StatusCode, result.Error);
+        }
+
         public static ActionResult ErrorBadRequest(this ControllerBase controller, string? message = null)
         {
             return controller.BadRequest(new ErrorResponse(400, message));

@@ -37,8 +37,9 @@ namespace OmPlatform.Controllers
         [HttpPost]
         public async Task<ActionResult<GetOrderDto>> Post([FromBody] CreateOrderDto orderDto)
         {
-            var order = await _orderService.Create(orderDto);
-            return Created($"/orders/{order.Id}", order);
+            var result = await _orderService.Create(orderDto);
+            if (!result.IsSuccess) return this.Error(result);
+            return Created($"/orders/{result.Data.Id}", result);
         }
 
         [HttpPatch("{id}")]

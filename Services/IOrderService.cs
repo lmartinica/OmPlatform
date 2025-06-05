@@ -1,4 +1,5 @@
-﻿using OmPlatform.DTOs.Order;
+﻿using OmPlatform.Core;
+using OmPlatform.DTOs.Order;
 
 namespace OmPlatform.Services
 {
@@ -6,7 +7,7 @@ namespace OmPlatform.Services
     {
         Task<IEnumerable<GetOrderDto>> GetList();
         Task<GetOrderDto?> GetById(Guid id);
-        Task<GetOrderDto> Create(CreateOrderDto orderDto);
+        Task<Result<GetOrderDto>> Create(CreateOrderDto orderDto);
         Task<GetOrderDto?> Update(Guid id, UpdateOrderDto orderDto);
         Task<bool> Delete(Guid id);
     }

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using OmPlatform.Core;
 using OmPlatform.DTOs.Product;
 using OmPlatform.Models;
+using OmPlatform.Queries;
 using OmPlatform.Services;
 
 namespace OmPlatform.Controllers
@@ -28,8 +29,16 @@ namespace OmPlatform.Controllers
             [FromQuery] string? category,
             [FromQuery] string? search)
         {
-            // TODO add here ProductQuery productQuery = new() with constructor
-            var products = await _productService.GetList(HttpContext.Request.Query);
+            var productQuery = new ProductQuery()
+            {
+                MinPrice = minPrice,
+                MaxPrice = maxPrice,
+                Stock = stock,
+                Category = category,
+                Search = search
+            };
+
+            var products = await _productService.GetList(productQuery);
             return Ok(products);
         }
 
