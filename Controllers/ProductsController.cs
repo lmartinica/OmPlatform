@@ -38,33 +38,33 @@ namespace OmPlatform.Controllers
                 Search = search
             };
 
-            var products = await _productService.GetList(productQuery);
-            return Ok(products);
+            var result = await _productService.GetList(productQuery);
+            return Ok(result.Data);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GetProductDto>> GetById(Guid id)
         {
-            var product = await _productService.GetById(id);
-            if (product == null) return this.ErrorNotFound();
-            return Ok(product);
+            var result = await _productService.GetById(id);
+            if (!result.IsSuccess) return this.ErrorNotFound();
+            return Ok(result.Data);
         }
 
         [HttpPost]
         [Authorize(Roles = Constants.Admin)]
         public async Task<ActionResult<GetProductDto>> Post([FromBody] CreateProductDto productDto)
         {
-            var product = await _productService.Create(productDto);
-            return Created($"/products/{product.Id}", product);
+            var result = await _productService.Create(productDto);
+            return Created($"/products/{result.Data.Id}", result.Data);
         }
 
         [HttpPatch("{id}")]
         [Authorize(Roles = Constants.Admin)]
         public async Task<ActionResult<GetProductDto>> Update(Guid id, [FromBody] UpdateProductDto productDto)
         {
-            var product = await _productService.Update(id, productDto);
-            if (product == null) return this.ErrorNotFound();
-            return Ok(product);
+            var result = await _productService.Update(id, productDto);
+            if (!result.IsSuccess) return this.ErrorNotFound();
+            return Ok(result.Data);
         }
 
         [HttpDelete("{id}")]
@@ -72,7 +72,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _productService.Delete(id);
-            if (!result) return this.ErrorNotFound();
+            if (!result.IsSuccess) return this.ErrorNotFound();
             return NoContent();
         }
     }

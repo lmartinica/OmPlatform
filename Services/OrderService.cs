@@ -3,6 +3,7 @@ using OmPlatform.Core;
 using OmPlatform.DTOs.Order;
 using OmPlatform.Models;
 using OmPlatform.Repositories;
+using static OmPlatform.Core.Result<OmPlatform.DTOs.Order.GetOrderDto>;
 
 namespace OmPlatform.Services
 {
@@ -22,7 +23,7 @@ namespace OmPlatform.Services
             _cache = cache;
         }
 
-        public async Task<IEnumerable<GetOrderDto>> GetList()
+        public async Task<Result<IEnumerable<GetOrderDto>>> GetList()
         {
             var orders = await _cache.GetOrCreateAsync(_cacheName, async entry =>
             {
@@ -32,15 +33,16 @@ namespace OmPlatform.Services
 
             if (_currentUserService.IsUser()) 
                 orders = orders.Where(o => o.UserId == _currentUserService.GetUserId());
-            return orders.Select(x=>x.ToOrderDto());
+            return Result<IEnumerable<GetOrderDto>>.Success(orders.Select(x=>x.ToOrderDto()));
         }
 
-        public async Task<GetOrderDto?> GetById(Guid id)
+        public async Task<Result<GetOrderDto>> GetById(Guid id)
         {
             var order = await _repository.GetById(id);
-            if (order == null) return null;
-            if (!_currentUserService.IsAllowed(order.UserId)) return null;
-            return order.ToOrderDto();
+            if (order == null) return Failure(404);
+            if (!_currentUserService.IsAllowed(order.UserId))
+                return Failure(404);
+            return Success(order.ToOrderDto());
         }
 
         public async Task<Result<GetOrderDto>> Create(CreateOrderDto orderDto)
@@ -56,11 +58,11 @@ namespace OmPlatform.Services
             {
                 var product = await _productRepository.GetById(item.ProductId);
                 if (product == null) 
-                    return Result<GetOrderDto>.Failure(404, $"Product with ID {item.ProductId} not found.");
+                    return Failure(404, $"Product with ID {item.ProductId} not found.");
                 if (product.Stock < item.Quantity)
-                    return Result<GetOrderDto>.Failure(400, $"Not enough stock for product {product.Id}.");
+                    return Failure(400, $"Not enough stock for product {product.Id}.");
                 if (item.Quantity <= 0)
-                    return Result<GetOrderDto>.Failure(400,$"Quantity must be higher than 0 for product {product.Id}.");
+                    return Failure(400,$"Quantity must be higher than 0 for product {product.Id}.");
 
                 // TODO update not in loop check (transactions) link unitOfWork
                 product.Stock -= item.Quantity;
@@ -71,28 +73,30 @@ namespace OmPlatform.Services
             var createdOrder = await _repository.Create(order);
             // TODO unitOfWork above
             _cache.Remove(_cacheName);
-            return Result<GetOrderDto>.Success(createdOrder.ToOrderDto());
+            return Success(createdOrder.ToOrderDto());
         }
 
-        public async Task<GetOrderDto?> Update(Guid id, UpdateOrderDto orderDto)
+        public async Task<Result<GetOrderDto>> Update(Guid id, UpdateOrderDto orderDto)
         {
             var order = await _repository.GetById(id);
-            if (order == null) return null;
-            if (!_currentUserService.IsAllowed(order.UserId)) return null;
+            if (order == null) return Failure(404);
+            if (!_currentUserService.IsAllowed(order.UserId))
+                return Failure(404);
             orderDto.UpdateOrder(order);
             await _repository.Update();
             _cache.Remove(_cacheName);
-            return order.ToOrderDto();
+            return Success(order.ToOrderDto());
         }
 
-        public async Task<bool> Delete(Guid id)
+        public async Task<Result<bool>> Delete(Guid id)
         {
             var order = await _repository.GetById(id);
-            if (order == null) return false;
-            if (!_currentUserService.IsAllowed(order.UserId)) return false;
+            if (order == null) return Result<bool>.Failure(404);
+            if (!_currentUserService.IsAllowed(order.UserId)) 
+                return Result<bool>.Failure(404);
             await _repository.Delete(order);
             _cache.Remove(_cacheName);
-            return true;
+            return Result<bool>.Success(true);
         }
     }
 }

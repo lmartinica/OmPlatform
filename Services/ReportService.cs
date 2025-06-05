@@ -4,6 +4,7 @@ using OmPlatform.DTOs.Order;
 using OmPlatform.DTOs.Reports;
 using OmPlatform.Models;
 using OmPlatform.Repositories;
+using System.Collections.Generic;
 
 namespace OmPlatform.Services
 {
@@ -16,19 +17,19 @@ namespace OmPlatform.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<GetSaleMonthDto>> GetSales()
+        public async Task<Result<IEnumerable<GetSaleMonthDto>>> GetSales()
         {
-            return await _repository.GetSales();
+            return Result<IEnumerable<GetSaleMonthDto>>.Success(await _repository.GetSales());
         }
 
-        public async Task<IEnumerable<GetTopProductDto>> GetTopProducts()
+        public async Task<Result<IEnumerable<GetTopProductDto>>> GetTopProducts()
         {
-            return await _repository.GetTopProducts();
+            return Result<IEnumerable<GetTopProductDto>>.Success(await _repository.GetTopProducts());
         }
 
-        public async Task<IEnumerable<GetTopCustomerDto>> GetTopCustomers()
+        public async Task<Result<IEnumerable<GetTopCustomerDto>>> GetTopCustomers()
         {
-            return await _repository.GetTopCustomers();
+            return Result<IEnumerable<GetTopCustomerDto>>.Success(await _repository.GetTopCustomers());
         }
     }
 }
