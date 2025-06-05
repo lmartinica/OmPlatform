@@ -1,10 +1,14 @@
-﻿namespace OmPlatform.DTOs.OrderItems
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OmPlatform.DTOs.OrderItems
 {
     public class CreateOrderItemDto
     {
-        // TODO add [Required] - framework verifica in controller
-        // Data annotations API
-        public Guid ProductId { get; set; }
-        public int Quantity { get; set; }
+        [Required]
+        public Guid? ProductId { get; set; }
+
+        [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Product quantity must be at least 1.")]
+        public int? Quantity { get; set; }
     }
 }
