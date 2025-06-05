@@ -22,16 +22,16 @@ namespace OmPlatform.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GetOrderDto>>> GetList()
         {
-            var orders = await _orderService.GetList();
-            return Ok(orders);
+            var result = await _orderService.GetList();
+            return Ok(result.Data);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GetOrderDto>> GetById(Guid id)
         {
-            var order = await _orderService.GetById(id);
-            if (order == null) return this.ErrorNotFound();
-            return Ok(order);
+            var result = await _orderService.GetById(id);
+            if (!result.IsSuccess) return this.ErrorNotFound();
+            return Ok(result.Data);
         }
 
         [HttpPost]
@@ -39,22 +39,22 @@ namespace OmPlatform.Controllers
         {
             var result = await _orderService.Create(orderDto);
             if (!result.IsSuccess) return this.Error(result);
-            return Created($"/orders/{result.Data.Id}", result);
+            return Created($"/orders/{result.Data.Id}", result.Data);
         }
 
         [HttpPatch("{id}")]
         public async Task<ActionResult<GetOrderDto>> Update(Guid id, [FromBody] UpdateOrderDto orderDto)
         {
-            var order = await _orderService.Update(id, orderDto);
-            if (order == null) return this.ErrorNotFound();
-            return Ok(order);
+            var result = await _orderService.Update(id, orderDto);
+            if (!result.IsSuccess) return this.ErrorNotFound();
+            return Ok(result.Data);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _orderService.Delete(id);
-            if (!result) return this.ErrorNotFound();
+            if (!result.IsSuccess) return this.ErrorNotFound();
             return NoContent();
         }
     }

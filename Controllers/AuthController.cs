@@ -30,11 +30,11 @@ namespace OmPlatform.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] UserLoginDto userLoginDto)
         {
-            var user = await _userService.GetByEmailAndPassword(userLoginDto.Email, userLoginDto.Password);
+            var result = await _userService.GetByEmailAndPassword(userLoginDto.Email, userLoginDto.Password);
 
-            if (user != null)
+            if (result.IsSuccess)
             {
-                var token = _authService.GenerateJwtToken(user);
+                var token = _authService.GenerateJwtToken(result.Data);
                 return Ok(new { token });
             }
             return this.ErrorUnauthorized("Incorrect credentials");
@@ -43,10 +43,10 @@ namespace OmPlatform.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] CreateUserDto createUserDto)
         {
-            var user = await _userService.GetByEmail(createUserDto.Email);
-            if (user != null) return this.ErrorUnauthorized("Email address already used");
-            var newUser = await _userService.Create(createUserDto);
-            return Created($"/users/{newUser.Id}", newUser);
+            var result = await _userService.GetByEmail(createUserDto.Email);
+            if (result.IsSuccess) return this.ErrorUnauthorized("Email address already used");
+            var resultCreate = await _userService.Create(createUserDto);
+            return Created($"/users/{resultCreate.Data.Id}", resultCreate.Data);
         }
     }
 }

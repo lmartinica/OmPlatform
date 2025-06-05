@@ -5,7 +5,7 @@ using OmPlatform.Models;
 using OmPlatform.Queries;
 using OmPlatform.Repositories;
 using System.Web;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using static OmPlatform.Core.Result<OmPlatform.DTOs.Product.GetProductDto>;
 
 namespace OmPlatform.Services
 {
@@ -21,7 +21,7 @@ namespace OmPlatform.Services
             _cache = cache;
         }
 
-        public async Task<IEnumerable<GetProductDto>> GetList(ProductQuery productQuery)
+        public async Task<Result<IEnumerable<GetProductDto>>> GetList(ProductQuery productQuery)
         {
             IEnumerable<Products>? products;
            
@@ -57,43 +57,43 @@ namespace OmPlatform.Services
                     products = ServiceBinarySearch(products, productQuery.Search);
             }
 
-            return products.Select(x => x.ToProductDto());
+            return Result<IEnumerable<GetProductDto>>.Success(products.Select(x => x.ToProductDto()));
         }
 
-        public async Task<GetProductDto?> GetById(Guid id)
+        public async Task<Result<GetProductDto>> GetById(Guid id)
         {
             var product = await _repository.GetById(id);
-            return product == null ? null : product.ToProductDto();
+            return product == null ? Failure(404) : Success(product.ToProductDto());
         }
 
-        public async Task<GetProductDto> Create(CreateProductDto productDto)
+        public async Task<Result<GetProductDto>> Create(CreateProductDto productDto)
         {
             var product = productDto.ToProduct();
             var createdProduct = await _repository.Create(product);
             _cache.Remove(_cacheName);
-            return createdProduct.ToProductDto();
+            return Success(createdProduct.ToProductDto());
         }
 
-        public async Task<GetProductDto?> Update(Guid id, UpdateProductDto productDto)
+        public async Task<Result<GetProductDto>> Update(Guid id, UpdateProductDto productDto)
         {
             var product = await _repository.GetById(id);
-            if (product == null) return null;
+            if (product == null) return Failure(404);
 
             productDto.UpdateProduct(product);
             await _repository.Update();
 
             _cache.Remove(_cacheName);
 
-            return product.ToProductDto();
+            return Success(product.ToProductDto());
         }
 
-        public async Task<bool> Delete(Guid id)
+        public async Task<Result<bool>> Delete(Guid id)
         {
             var product = await _repository.GetById(id);
-            if (product == null) return false;
+            if (product == null) return Result<bool>.Failure(404);
             await _repository.Delete(product);
             _cache.Remove(_cacheName);
-            return true;
+            return Result<bool>.Success(true);
         }
 
         public IEnumerable<Products> ServiceBinarySearch(IEnumerable<Products> products, string search)

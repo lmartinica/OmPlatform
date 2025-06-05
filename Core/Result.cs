@@ -12,7 +12,7 @@
             return new Result<T> { IsSuccess = true, Data = data };
         }
 
-        public static Result<T> Failure(int statusCode, string message)
+        public static Result<T> Failure(int statusCode, string message = null)
         {
             return new Result<T> { IsSuccess = false, StatusCode = statusCode, Error = new ErrorResponse(statusCode, message) };
         }

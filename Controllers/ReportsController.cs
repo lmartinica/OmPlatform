@@ -23,22 +23,22 @@ namespace OmPlatform.Controllers
         [HttpGet("sales")]
         public async Task<ActionResult<IEnumerable<GetProductDto>>> GetSales()
         {
-            var entitites = await _reportService.GetSales();
-            return Ok(entitites);
+            var result = await _reportService.GetSales();
+            return Ok(result.Data);
         }
 
         [HttpGet("topProducts")]
         public async Task<ActionResult<IEnumerable<GetProductDto>>> GetTopProducts()
         {
-            var entitites = await _reportService.GetTopProducts();
-            return Ok(entitites);
+            var result = await _reportService.GetTopProducts();
+            return Ok(result.Data);
         }
 
         [HttpGet("topCustomers")]
         public async Task<ActionResult<IEnumerable<GetProductDto>>> GetTopCustomers()
         {
-            var entitites = await _reportService.GetTopCustomers();
-            return Ok(entitites);
+            var result = await _reportService.GetTopCustomers();
+            return Ok(result.Data);
         }
     }
 }

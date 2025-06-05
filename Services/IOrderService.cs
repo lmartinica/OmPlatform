@@ -5,10 +5,10 @@ namespace OmPlatform.Services
 {
     public interface IOrderService
     {
-        Task<IEnumerable<GetOrderDto>> GetList();
-        Task<GetOrderDto?> GetById(Guid id);
+        Task<Result<IEnumerable<GetOrderDto>>> GetList();
+        Task<Result<GetOrderDto>> GetById(Guid id);
         Task<Result<GetOrderDto>> Create(CreateOrderDto orderDto);
-        Task<GetOrderDto?> Update(Guid id, UpdateOrderDto orderDto);
-        Task<bool> Delete(Guid id);
+        Task<Result<GetOrderDto>> Update(Guid id, UpdateOrderDto orderDto);
+        Task<Result<bool>> Delete(Guid id);
     }
 }
