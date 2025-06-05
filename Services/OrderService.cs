@@ -47,6 +47,9 @@ namespace OmPlatform.Services
 
         public async Task<Result<GetOrderDto>> Create(CreateOrderDto orderDto)
         {
+            if (orderDto.OrderItems == null || orderDto.OrderItems.Count == 0)
+                return Failure(400, "Order must contain at least one product.");
+
             var order = orderDto.ToOrder();
 
             order.UserId = _currentUserService.GetUserId();
@@ -62,7 +65,7 @@ namespace OmPlatform.Services
                 if (product.Stock < item.Quantity)
                     return Failure(400, $"Not enough stock for product {product.Id}.");
                 if (item.Quantity <= 0)
-                    return Failure(400,$"Quantity must be higher than 0 for product {product.Id}.");
+                    return Failure(400,$"Product quantity must be at least 1.");
 
                 // TODO update not in loop check (transactions) link unitOfWork
                 product.Stock -= item.Quantity;

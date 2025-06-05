@@ -1,8 +1,13 @@
-﻿namespace OmPlatform.DTOs.Auth
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OmPlatform.DTOs.Auth
 {
     public class UserLoginDto
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
+        [Required]
+        public string? Email { get; set; }
+
+        [Required]
+        public string? Password { get; set; }
     }
 }

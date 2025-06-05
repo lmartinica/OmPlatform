@@ -15,7 +15,6 @@ namespace OmPlatform.Core
         public DbSet<Orders> Orders { get; set; }
         public DbSet<OrderItems> OrderItems { get; set; }
 
-        // TODO add required columns, nvarchar(50)
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Index foreign key

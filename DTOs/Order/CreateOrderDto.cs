@@ -1,9 +1,11 @@
 ﻿using OmPlatform.DTOs.OrderItems;
+using System.ComponentModel.DataAnnotations;
 
 namespace OmPlatform.DTOs.Order
 {
     public class CreateOrderDto
     {
-        public ICollection<CreateOrderItemDto> OrderItems { get; set; }
+        [Required]
+        public ICollection<CreateOrderItemDto>? OrderItems { get; set; }
     }
 }

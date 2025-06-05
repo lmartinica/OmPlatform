@@ -59,7 +59,16 @@ builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
     {
         options.InvalidModelStateResponseFactory = context =>
-            new BadRequestObjectResult(new ErrorResponse(400));
+        {
+            var errors = context.ModelState
+                .Where(e => e.Value.Errors.Count > 0)
+                .SelectMany(e => e.Value.Errors)
+                .Select(err => err.ErrorMessage)
+                .ToList();
+
+            string? message = errors.Count == 1 ? errors.First() : null;
+            return new BadRequestObjectResult(new ErrorResponse(400, message));
+        };
     });
 
 var app = builder.Build();

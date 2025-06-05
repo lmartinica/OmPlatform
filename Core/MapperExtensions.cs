@@ -85,8 +85,8 @@ namespace OmPlatform.Core
         {
             OrderItems = dto.OrderItems.Select(i => new OrderItems
             {
-                ProductId = i.ProductId,
-                Quantity = i.Quantity
+                ProductId = i.ProductId.Value,
+                Quantity = i.Quantity.Value
             }).ToList()
         };
 
