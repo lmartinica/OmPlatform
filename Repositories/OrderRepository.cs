@@ -17,7 +17,6 @@ namespace OmPlatform.Repositories
         {
             return await _context.Orders
                 .Include(o => o.OrderItems)
-                    .ThenInclude(oi => oi.Product)
                 .ToListAsync();
         }
 
@@ -25,14 +24,13 @@ namespace OmPlatform.Repositories
         {
             return await _context.Orders
                 .Include(o => o.OrderItems)
-                    .ThenInclude(oi => oi.Product)
                 .FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<Orders> Create(Orders order)
         {
+            // UnitOfWork method 
             _context.Orders.Add(order);
-            await _context.SaveChangesAsync();
             return order;
         }
 

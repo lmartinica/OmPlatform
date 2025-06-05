@@ -54,6 +54,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IReportRepository, ReportRepository>();
 builder.Services.AddScoped<IReportService, ReportService>();
 
+builder.Services.AddScoped<IOrderUnitOfWork, OrderUnitOfWork>();
+
 // Change default Bad Request error model
 builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
