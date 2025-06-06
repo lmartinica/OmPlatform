@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OmPlatform.Core;
 using OmPlatform.DTOs.Order;
-using OmPlatform.Services;
+using OmPlatform.Interfaces;
 using System.Security.Claims;
 
 namespace OmPlatform.Controllers

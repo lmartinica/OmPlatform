@@ -1,7 +1,7 @@
 ﻿using OmPlatform.Core;
 using OmPlatform.DTOs.User;
 
-namespace OmPlatform.Services
+namespace OmPlatform.Interfaces
 {
     public interface IUserService
     {

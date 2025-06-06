@@ -1,4 +1,5 @@
 ﻿using OmPlatform.Core;
+using OmPlatform.Interfaces;
 using System;
 
 namespace OmPlatform.Repositories

@@ -1,6 +1,6 @@
 ﻿using OmPlatform.Models;
 
-namespace OmPlatform.Repositories
+namespace OmPlatform.Interfaces
 {
     public interface IUserRepository
     {

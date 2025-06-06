@@ -1,4 +1,4 @@
-﻿namespace OmPlatform.Repositories
+﻿namespace OmPlatform.Interfaces
 {
     public interface IOrderUnitOfWork
     {

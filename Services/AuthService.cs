@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using OmPlatform.Core;
 using OmPlatform.DTOs.User;
+using OmPlatform.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;

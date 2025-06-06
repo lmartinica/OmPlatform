@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Caching.Memory;
 using OmPlatform.Core;
 using OmPlatform.DTOs.User;
+using OmPlatform.Interfaces;
 using OmPlatform.Models;
-using OmPlatform.Repositories;
 using System.Collections.Generic;
 using System.Runtime.ConstrainedExecution;
 using static OmPlatform.Core.Result<OmPlatform.DTOs.User.GetUserDto>;
