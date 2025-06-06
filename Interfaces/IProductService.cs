@@ -2,7 +2,7 @@
 using OmPlatform.DTOs.Product;
 using OmPlatform.Queries;
 
-namespace OmPlatform.Services
+namespace OmPlatform.Interfaces
 {
     public interface IProductService
     {

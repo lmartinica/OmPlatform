@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OmPlatform.Core;
+using OmPlatform.Interfaces;
 using OmPlatform.Repositories;
 using OmPlatform.Services;
 using System.Text;

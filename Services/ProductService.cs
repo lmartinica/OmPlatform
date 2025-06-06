@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using OmPlatform.Core;
 using OmPlatform.DTOs.Product;
+using OmPlatform.Interfaces;
 using OmPlatform.Models;
 using OmPlatform.Queries;
-using OmPlatform.Repositories;
 using System.Web;
 using static OmPlatform.Core.Result<OmPlatform.DTOs.Product.GetProductDto>;
 

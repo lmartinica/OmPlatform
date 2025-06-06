@@ -2,8 +2,8 @@
 using OmPlatform.Core;
 using OmPlatform.DTOs.Order;
 using OmPlatform.DTOs.Reports;
+using OmPlatform.Interfaces;
 using OmPlatform.Models;
-using OmPlatform.Repositories;
 using System.Collections.Generic;
 
 namespace OmPlatform.Services

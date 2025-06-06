@@ -1,6 +1,6 @@
 ﻿using OmPlatform.DTOs.Order;
 
-namespace OmPlatform.Services
+namespace OmPlatform.Interfaces
 {
     public interface ICurrentUserService
     {

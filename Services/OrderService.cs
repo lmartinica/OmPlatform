@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using OmPlatform.Core;
 using OmPlatform.DTOs.Order;
+using OmPlatform.Interfaces;
 using OmPlatform.Models;
-using OmPlatform.Repositories;
 using static OmPlatform.Core.Result<OmPlatform.DTOs.Order.GetOrderDto>;
 
 namespace OmPlatform.Services

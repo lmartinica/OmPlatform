@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OmPlatform.Core;
+using OmPlatform.Interfaces;
 using OmPlatform.Models;
 
 namespace OmPlatform.Repositories

@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using OmPlatform.Core;
 using OmPlatform.DTOs.Product;
 using OmPlatform.DTOs.User;
+using OmPlatform.Interfaces;
 using OmPlatform.Models;
-using OmPlatform.Services;
 
 namespace OmPlatform.Controllers
 {

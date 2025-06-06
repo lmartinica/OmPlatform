@@ -2,7 +2,7 @@
 using OmPlatform.DTOs.Order;
 using OmPlatform.DTOs.Reports;
 
-namespace OmPlatform.Services
+namespace OmPlatform.Interfaces
 {
     public interface IReportService
     {
