@@ -11,7 +11,6 @@ namespace OmPlatform.Services
         private readonly IOrderUnitOfWork _orderUnitOfWork;
         private readonly ICurrentUserService _currentUserService;
         private readonly IMemoryCache _cache;
-        private readonly string _cacheName = "orders";
 
         public OrderService(IOrderUnitOfWork orderUnitOfWork, ICurrentUserService currentUserService, IMemoryCache cache)
         {
@@ -22,7 +21,7 @@ namespace OmPlatform.Services
 
         public async Task<Result<IEnumerable<GetOrderDto>>> GetList()
         {
-            var orders = await _cache.GetOrCreateAsync(_cacheName, async entry =>
+            var orders = await _cache.GetOrCreateAsync(Constants.RouteOrder, async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
                 return await _orderUnitOfWork.Orders.GetList();
@@ -71,7 +70,7 @@ namespace OmPlatform.Services
             var createdOrder = await _orderUnitOfWork.Orders.Create(order);
             await _orderUnitOfWork.CompleteAsync();
 
-            _cache.Remove(_cacheName);
+            _cache.Remove(Constants.RouteOrder);
             return Success(createdOrder.ToOrderDto());
         }
 
@@ -83,7 +82,7 @@ namespace OmPlatform.Services
                 return Failure(404);
             orderDto.UpdateOrder(order);
             await _orderUnitOfWork.Orders.Update();
-            _cache.Remove(_cacheName);
+            _cache.Remove(Constants.RouteOrder);
             return Success(order.ToOrderDto());
         }
 
@@ -94,7 +93,7 @@ namespace OmPlatform.Services
             if (!_currentUserService.IsAllowed(order.UserId)) 
                 return Result<bool>.Failure(404);
             await _orderUnitOfWork.Orders.Delete(order);
-            _cache.Remove(_cacheName);
+            _cache.Remove(Constants.RouteOrder);
             return Result<bool>.Success(true);
         }
     }

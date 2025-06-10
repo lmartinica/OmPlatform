@@ -12,7 +12,6 @@ namespace OmPlatform.Services
     {
         private readonly IProductRepository _repository;
         private readonly IMemoryCache _cache;
-        private readonly string _cacheName = "products";
 
         public ProductService(IProductRepository repository, IMemoryCache cache)
         {
@@ -24,7 +23,7 @@ namespace OmPlatform.Services
         {
             IEnumerable<Products>? products;
            
-            products = await _cache.GetOrCreateAsync(_cacheName, async entry =>
+            products = await _cache.GetOrCreateAsync(Constants.RouteProduct, async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
                 return await _repository.GetList();
@@ -69,7 +68,7 @@ namespace OmPlatform.Services
         {
             var product = productDto.ToProduct();
             var createdProduct = await _repository.Create(product);
-            _cache.Remove(_cacheName);
+            _cache.Remove(Constants.RouteProduct);
             return Success(createdProduct.ToProductDto());
         }
 
@@ -81,7 +80,7 @@ namespace OmPlatform.Services
             productDto.UpdateProduct(product);
             await _repository.Update();
 
-            _cache.Remove(_cacheName);
+            _cache.Remove(Constants.RouteProduct);
 
             return Success(product.ToProductDto());
         }
@@ -91,7 +90,7 @@ namespace OmPlatform.Services
             var product = await _repository.GetById(id);
             if (product == null) return Result<bool>.Failure(404);
             await _repository.Delete(product);
-            _cache.Remove(_cacheName);
+            _cache.Remove(Constants.RouteProduct);
             return Result<bool>.Success(true);
         }
 
