@@ -12,7 +12,6 @@ namespace OmPlatform.Services
         private readonly IUserRepository _repository;
         private readonly ICurrentUserService _currentUserService;
         private readonly IMemoryCache _cache;
-        private readonly string _cacheName = "users";
 
         public UserService(IUserRepository repository, ICurrentUserService currentUserService, IMemoryCache cache)
         {
@@ -23,7 +22,7 @@ namespace OmPlatform.Services
 
         public async Task<Result<IEnumerable<GetUserDto>>> GetList()
         {
-            var users = await _cache.GetOrCreateAsync(_cacheName, async entry =>
+            var users = await _cache.GetOrCreateAsync(Constants.RouteUser, async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
                 return await _repository.GetList();
@@ -64,7 +63,7 @@ namespace OmPlatform.Services
             user.Password = hasher.HashPassword(user, user.Password);
 
             var createdUser = await _repository.Create(user);
-            _cache.Remove(_cacheName);
+            _cache.Remove(Constants.RouteUser);
             return Success(createdUser.ToUserDto());
         }
 
@@ -76,7 +75,7 @@ namespace OmPlatform.Services
                 return Failure(404);
             userDto.UpdateUser(user);
             await _repository.Update();
-            _cache.Remove(_cacheName);
+            _cache.Remove(Constants.RouteUser);
             return Success(user.ToUserDto());
         }
 
@@ -87,7 +86,7 @@ namespace OmPlatform.Services
             if (!_currentUserService.IsAllowed(user.Id)) 
                 return Result<bool>.Failure(404);
             await _repository.Delete(user);
-            _cache.Remove(_cacheName);
+            _cache.Remove(Constants.RouteUser);
             return Result<bool>.Success(true);
         }
     }

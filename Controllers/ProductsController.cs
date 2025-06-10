@@ -53,7 +53,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult<GetProductDto>> Post([FromBody] CreateProductDto productDto)
         {
             var result = await _productService.Create(productDto);
-            return Created($"/products/{result.Data.Id}", result.Data);
+            return Created($"{Constants.RouteProduct}/{result.Data.Id}", result.Data);
         }
 
         [HttpPatch("{id}")]

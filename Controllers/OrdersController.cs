@@ -38,7 +38,7 @@ namespace OmPlatform.Controllers
         {
             var result = await _orderService.Create(orderDto);
             if (!result.IsSuccess) return this.Error(result);
-            return Created($"/orders/{result.Data.Id}", result.Data);
+            return Created($"{Constants.RouteOrder}/{result.Data.Id}", result.Data);
         }
 
         [HttpPatch("{id}")]
