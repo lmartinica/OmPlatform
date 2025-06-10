@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
-using OmPlatform.Core;
-using OmPlatform.DTOs.User;
+﻿using OmPlatform.Core;
 using OmPlatform.Interfaces;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
 
 namespace OmPlatform.Services
 {

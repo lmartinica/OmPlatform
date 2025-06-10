@@ -2,7 +2,6 @@
 using OmPlatform.Core;
 using OmPlatform.DTOs.Reports;
 using OmPlatform.Interfaces;
-using OmPlatform.Models;
 
 namespace OmPlatform.Repositories
 {

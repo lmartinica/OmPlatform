@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OmPlatform.Core;
-using OmPlatform.DTOs.Product;
 using OmPlatform.DTOs.User;
 using OmPlatform.Interfaces;
-using OmPlatform.Models;
 
 namespace OmPlatform.Controllers
 {

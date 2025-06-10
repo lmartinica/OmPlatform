@@ -4,7 +4,6 @@ using OmPlatform.DTOs.Product;
 using OmPlatform.Interfaces;
 using OmPlatform.Models;
 using OmPlatform.Queries;
-using System.Web;
 using static OmPlatform.Core.Result<OmPlatform.DTOs.Product.GetProductDto>;
 
 namespace OmPlatform.Services

@@ -1,10 +1,6 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using OmPlatform.Core;
-using OmPlatform.DTOs.Order;
+﻿using OmPlatform.Core;
 using OmPlatform.DTOs.Reports;
 using OmPlatform.Interfaces;
-using OmPlatform.Models;
-using System.Collections.Generic;
 
 namespace OmPlatform.Services
 {

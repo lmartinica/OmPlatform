@@ -1,5 +1,4 @@
 ﻿using OmPlatform.Core;
-using OmPlatform.DTOs.Order;
 using OmPlatform.DTOs.Reports;
 
 namespace OmPlatform.Interfaces

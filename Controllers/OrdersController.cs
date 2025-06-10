@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using OmPlatform.Core;
 using OmPlatform.DTOs.Order;
 using OmPlatform.Interfaces;
-using System.Security.Claims;
 
 namespace OmPlatform.Controllers
 {
