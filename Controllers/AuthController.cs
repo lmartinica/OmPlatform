@@ -1,16 +1,8 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using OmPlatform.Core;
 using OmPlatform.DTOs.Auth;
-using OmPlatform.DTOs.Order;
 using OmPlatform.DTOs.User;
 using OmPlatform.Interfaces;
-using OmPlatform.Models;
-using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace OmPlatform.Controllers
 {

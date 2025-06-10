@@ -3,9 +3,6 @@ using Microsoft.Extensions.Caching.Memory;
 using OmPlatform.Core;
 using OmPlatform.DTOs.User;
 using OmPlatform.Interfaces;
-using OmPlatform.Models;
-using System.Collections.Generic;
-using System.Runtime.ConstrainedExecution;
 using static OmPlatform.Core.Result<OmPlatform.DTOs.User.GetUserDto>;
 
 namespace OmPlatform.Services

@@ -1,5 +1,4 @@
 ﻿using OmPlatform.DTOs.Reports;
-using OmPlatform.Models;
 
 namespace OmPlatform.Interfaces
 {

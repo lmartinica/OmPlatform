@@ -2,7 +2,6 @@
 using OmPlatform.Core;
 using OmPlatform.DTOs.Order;
 using OmPlatform.Interfaces;
-using OmPlatform.Models;
 using static OmPlatform.Core.Result<OmPlatform.DTOs.Order.GetOrderDto>;
 
 namespace OmPlatform.Services

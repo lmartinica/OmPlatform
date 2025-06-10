@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using OmPlatform.Models;
-using System.Reflection.Metadata;
 
 namespace OmPlatform.Core
 {
