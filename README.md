@@ -1,5 +1,5 @@
 ## Order Management Platform
 
-This is a project...
+This is an order management platform for an online store.
 
 # Arhitecture
