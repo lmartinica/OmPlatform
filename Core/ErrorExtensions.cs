@@ -6,7 +6,7 @@ namespace OmPlatform.Core
     {
         public static ActionResult Error<T>(this ControllerBase controller, Result<T> result)
         {
-            return controller.StatusCode(result.StatusCode, result.Error);
+            return controller.StatusCode(result.Error.GetStatusCode(), result.Error);
         }
 
         public static ActionResult ErrorBadRequest(this ControllerBase controller, string? message = null)

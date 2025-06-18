@@ -70,7 +70,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _productService.Delete(id);
-            if (!result.IsSuccess) return this.ErrorNotFound();
+            if (!result.IsSuccess) return this.ErrorNotFound(); // TODO - replace where result
             return NoContent();
         }
     }

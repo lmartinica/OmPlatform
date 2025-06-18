@@ -2,12 +2,20 @@
 {
     public class ErrorResponse
     {
+        private int _statusCode;
+
         public ErrorDetail Error { get; set; }
 
-        public ErrorResponse(int code, string? message = null)
+        public ErrorResponse(int statusCode, string? message = null)
         {
-            Error = GetErrorResponse(code);
+            Error = GetErrorResponse(statusCode);
+            _statusCode = statusCode;
             if(message != null) Error.Message = message;
+        }
+
+        public int GetStatusCode()
+        {
+            return _statusCode;
         }
 
         private ErrorDetail GetErrorResponse(int status)

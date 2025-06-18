@@ -30,20 +30,15 @@ namespace OmPlatform.Repositories
 
         public async Task<Orders> Create(Orders order)
         {
-            // UnitOfWork method 
+            // UnitOfWork 
             _context.Orders.Add(order);
             return order;
         }
 
-        public async Task Update()
-        {
-            await _context.SaveChangesAsync();
-        }
-
         public async Task Delete(Orders order)
         {
+            // UnitOfWork 
             _context.Orders.Remove(order);
-            await _context.SaveChangesAsync();
         }
     }
 }
