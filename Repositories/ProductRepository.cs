@@ -28,18 +28,16 @@ namespace OmPlatform.Repositories
         public async Task<Products> Create(Products product)
         {
             _context.Products.Add(product);
-            await _context.SaveChangesAsync();
             return product;
-        }
-
-        public async Task Update()
-        {
-            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(Products product)
         {
             _context.Products.Remove(product);
+        }
+
+        public async Task SaveAsync()
+        {
             await _context.SaveChangesAsync();
         }
     }

@@ -29,14 +29,14 @@ namespace OmPlatform.Controllers
                 var token = _authService.GenerateJwtToken(result.Data);
                 return Ok(new { token });
             }
-            return this.ErrorUnauthorized("Incorrect credentials");
+            return this.Error(result);
         }
 
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] CreateUserDto createUserDto)
         {
             var result = await _userService.GetByEmail(createUserDto.Email);
-            if (result.IsSuccess) return this.ErrorUnauthorized("Email address already used");
+            if (!result.IsSuccess) return this.Error(result);
 
             var resultCreate = await _userService.Create(createUserDto);
             if (!resultCreate.IsSuccess) return this.Error(resultCreate);
