@@ -67,10 +67,14 @@ namespace OmPlatform.Services
                 order.TotalPrice += product.Price * item.Quantity;
             }
 
+            // Create order and save unit of work
             var createdOrder = await _orderUnitOfWork.Orders.Create(order);
-            await _orderUnitOfWork.CompleteAsync();
+            await _orderUnitOfWork.SaveAsync();
 
+            // Clear order and product cache
             _cache.Remove(Constants.RouteOrder);
+            _cache.Remove(Constants.RouteProduct);
+
             return Success(createdOrder.ToOrderDto());
         }
 
@@ -80,8 +84,10 @@ namespace OmPlatform.Services
             if (order == null) return Failure(404);
             if (!_currentUserService.IsAllowed(order.UserId))
                 return Failure(404);
+
             orderDto.UpdateOrder(order);
-            await _orderUnitOfWork.Orders.Update();
+            await _orderUnitOfWork.SaveAsync();
+
             _cache.Remove(Constants.RouteOrder);
             return Success(order.ToOrderDto());
         }
@@ -92,7 +98,11 @@ namespace OmPlatform.Services
             if (order == null) return Result<bool>.Failure(404);
             if (!_currentUserService.IsAllowed(order.UserId)) 
                 return Result<bool>.Failure(404);
+
+            // Remove from db context and save async
             await _orderUnitOfWork.Orders.Delete(order);
+            await _orderUnitOfWork.SaveAsync();
+
             _cache.Remove(Constants.RouteOrder);
             return Result<bool>.Success(true);
         }

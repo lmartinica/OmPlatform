@@ -37,7 +37,10 @@ namespace OmPlatform.Controllers
         {
             var result = await _userService.GetByEmail(createUserDto.Email);
             if (result.IsSuccess) return this.ErrorUnauthorized("Email address already used");
+
             var resultCreate = await _userService.Create(createUserDto);
+            if (!resultCreate.IsSuccess) return this.Error(resultCreate);
+
             return Created($"{Constants.RouteUser}/{resultCreate.Data.Id}", resultCreate.Data);
         }
     }

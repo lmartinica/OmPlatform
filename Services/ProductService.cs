@@ -68,6 +68,7 @@ namespace OmPlatform.Services
         {
             var product = productDto.ToProduct();
             var createdProduct = await _repository.Create(product);
+
             _cache.Remove(Constants.RouteProduct);
             return Success(createdProduct.ToProductDto());
         }
@@ -81,7 +82,6 @@ namespace OmPlatform.Services
             await _repository.Update();
 
             _cache.Remove(Constants.RouteProduct);
-
             return Success(product.ToProductDto());
         }
 
@@ -89,8 +89,10 @@ namespace OmPlatform.Services
         {
             var product = await _repository.GetById(id);
             if (product == null) return Result<bool>.Failure(404);
+
             await _repository.Delete(product);
             _cache.Remove(Constants.RouteProduct);
+
             return Result<bool>.Success(true);
         }
 

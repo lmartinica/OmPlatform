@@ -4,6 +4,6 @@
     {
         IOrderRepository Orders { get; }
         IProductRepository Products { get; }
-        Task<int> CompleteAsync();
+        Task<int> SaveAsync();
     }
 }

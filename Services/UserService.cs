@@ -73,8 +73,10 @@ namespace OmPlatform.Services
             if (user == null) return Failure(404);
             if (!_currentUserService.IsAllowed(user.Id)) 
                 return Failure(404);
+
             userDto.UpdateUser(user);
             await _repository.Update();
+
             _cache.Remove(Constants.RouteUser);
             return Success(user.ToUserDto());
         }
@@ -85,8 +87,10 @@ namespace OmPlatform.Services
             if (user == null) return Result<bool>.Failure(404);
             if (!_currentUserService.IsAllowed(user.Id)) 
                 return Result<bool>.Failure(404);
+
             await _repository.Delete(user);
             _cache.Remove(Constants.RouteUser);
+
             return Result<bool>.Success(true);
         }
     }

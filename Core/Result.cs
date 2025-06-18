@@ -4,7 +4,6 @@
     {
         public bool IsSuccess { get; set; }
         public T Data { get; set; }
-        public int StatusCode { get; set; }
         public ErrorResponse Error { get; set; }
 
         public static Result<T> Success(T data) 
@@ -14,7 +13,7 @@
 
         public static Result<T> Failure(int statusCode, string message = null)
         {
-            return new Result<T> { IsSuccess = false, StatusCode = statusCode, Error = new ErrorResponse(statusCode, message) };
+            return new Result<T> { IsSuccess = false, Error = new ErrorResponse(statusCode, message) };
         }
     }
 }

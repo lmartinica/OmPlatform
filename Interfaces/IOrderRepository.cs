@@ -7,7 +7,6 @@ namespace OmPlatform.Interfaces
         Task<IEnumerable<Orders>> GetList();
         Task<Orders?> GetById(Guid id);
         Task<Orders> Create(Orders order);
-        Task Update();
         Task Delete(Orders order);
     }
 }
