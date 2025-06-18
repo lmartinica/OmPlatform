@@ -44,7 +44,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult<GetProductDto>> GetById(Guid id)
         {
             var result = await _productService.GetById(id);
-            if (!result.IsSuccess) return this.ErrorNotFound();
+            if (!result.IsSuccess) return this.Error(result);
             return Ok(result.Data);
         }
 
@@ -61,7 +61,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult<GetProductDto>> Update(Guid id, [FromBody] UpdateProductDto productDto)
         {
             var result = await _productService.Update(id, productDto);
-            if (!result.IsSuccess) return this.ErrorNotFound();
+            if (!result.IsSuccess) return this.Error(result);
             return Ok(result.Data);
         }
 
@@ -70,7 +70,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _productService.Delete(id);
-            if (!result.IsSuccess) return this.ErrorNotFound(); // TODO - replace where result
+            if (!result.IsSuccess) return this.Error(result);
             return NoContent();
         }
     }

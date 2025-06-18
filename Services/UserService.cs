@@ -33,13 +33,13 @@ namespace OmPlatform.Services
         public async Task<Result<GetUserDto>> GetByEmailAndPassword(string email, string password)
         {
             var user = await _repository.GetByEmailAndPassword(email, password);
-            return user == null ? Failure(404) : Success(user.ToUserDto());
+            return user == null ? Failure(401, "Incorrect credentials") : Success(user.ToUserDto());
         }
 
         public async Task<Result<GetUserDto>> GetByEmail(string email)
         {
             var user = await _repository.GetByEmail(email);
-            return user == null ? Failure(404) : Success(user.ToUserDto());
+            return user != null ? Failure(401, "Email address already used") : Success(new());
         }
 
         public async Task<Result<GetUserDto>> GetById(Guid id)

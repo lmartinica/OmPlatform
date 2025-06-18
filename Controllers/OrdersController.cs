@@ -29,7 +29,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult<GetOrderDto>> GetById(Guid id)
         {
             var result = await _orderService.GetById(id);
-            if (!result.IsSuccess) return this.ErrorNotFound();
+            if (!result.IsSuccess) return this.Error(result);
             return Ok(result.Data);
         }
 
@@ -45,7 +45,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult<GetOrderDto>> Update(Guid id, [FromBody] UpdateOrderDto orderDto)
         {
             var result = await _orderService.Update(id, orderDto);
-            if (!result.IsSuccess) return this.ErrorNotFound();
+            if (!result.IsSuccess) return this.Error(result);
             return Ok(result.Data);
         }
 
@@ -53,7 +53,7 @@ namespace OmPlatform.Controllers
         public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _orderService.Delete(id);
-            if (!result.IsSuccess) return this.ErrorNotFound();
+            if (!result.IsSuccess) return this.Error(result);
             return NoContent();
         }
     }
