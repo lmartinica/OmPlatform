@@ -1,0 +1,12 @@
+@Url = http://localhost:5223
+
+GET {{Url}}/products/
+Accept: application/json
+###
+
+GET {{Url}}/products/
+Accept: application/json
+###
+
+GET {{Url}}/products/
+Accept: application/json
