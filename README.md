@@ -21,7 +21,7 @@ The platform is designed for scalability and maintainability using modern design
 | UnitTestProject               | Integration tests for authentication and authorization for all APIs            |
 |                               | Unit tests for all service classes that are exposed in APIs                    |								 
 
-## General Flow
+### General Flow
 - First the controller is called
 - The controller passes information to service layer
 - If data is needed from database, the service layer will call the repository layer
@@ -94,4 +94,3 @@ To run this application locally, follow these steps to get everything up and run
 - Configure in appsettings.json default database connection string and JWT Key.
 - For Testing, create a new test project and move the files from UnitTestProject folder inside the Test project.
 - Also add reference in test project to main project
-
