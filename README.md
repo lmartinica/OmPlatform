@@ -15,16 +15,14 @@
 | Core                          | Various classes for error and responses handling and some general classes      |
 | DTOs                          | Each endpoint will use a Create, Update and Get Dto model                      |
 | Interfaces                    | Interfaces for service and repository classes                                  |
-
-                  
-- Migrations:                    Entity framework database changes
-- Models:                        Database models for each entity: User, Product, Order and OrderItem
-- Queries:                       URL filters and parameters for entities (Only ListProducts API)
-- Repositories:                  Database operations for each entity type
-- Services:                      Bussiness logic for each entity type and authentication
-- Snapshots:                     Images for database schema, Bruno collection (API testing), unit tests results
-- UnitTestProject:               Integrations tests for authentication and authorization for all endpoints
-								 Unit tests for all service classes that are exposed in APIs
+| Migrations                    | Entity framework database changes												 |
+| Models						| Database models for each entity: User, Product, Order and OrderItem            |
+| Queries						| URL filters and parameters for entities (Only ListProducts API)                |
+| Repositories					| Database operations for each entity type										 |
+| Services						| Bussiness logic for each entity type and authentication					     |
+| Snapshots						| Images for database schema, Bruno collection (API testing), unit tests results |
+| UnitTestProject				| Integrations tests for authentication and authorization for all endpoints      |
+|								| Unit tests for all service classes that are exposed in APIs                    |								 
 
 ## General Flow
 - First the controller is called
@@ -84,15 +82,14 @@
 
 ## Setup
 - Install packages:
-	- Main repository: 
-		- Microsoft.AspNetCore.Authentication.JwtBearer
-		- Microsoft.EntityFrameworkCore.SqlServer
-		- Microsoft.EntityFrameworkCore.Tools
-	- Test repository:
-		- Microsoft.AspNetCore.Mvc.Testing
-		- Microsoft.Data.Sqlite.Core
-		- Microsoft.EntityFrameworkCore.Sqlite
-		- xUnit
+
+| Main repository                                      | Test repository                                         |
+|------------------------------------------------------|---------------------------------------------------------|
+| Microsoft.AspNetCore.Authentication.JwtBearer        | Microsoft.AspNetCore.Mvc.Testing                        |
+| Microsoft.EntityFrameworkCore.SqlServer              | Microsoft.Data.Sqlite.Core                              |
+| Microsoft.EntityFrameworkCore.Tools                  | Microsoft.EntityFrameworkCore.Sqlite                    |
+|                                                      | xUnit                                                   |
+
 - Configure in "appsettings.json" default database connection string and Jwt Key.
 - For Testing, create a new test project and move the files from "UnitTestProject" inside the Test project.
 - Also add reference in test project to main project
