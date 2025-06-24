@@ -1,11 +1,11 @@
 ﻿# OmPlatform
 
-- Online Management platform service for a basic online store
-- This project offers APIs for users to browse products and place orders
-- It is designed with OOP principles and SQL Server for data persistence
-- Functionalities are exposed via a RESTful API with various design patterns for maintainability and scalability 
-- The APIs can be integrated and tested with Postman, Bruno and Fiddler
-- Database is designed and mantained using code first approach from Entity Framework
+Online Management platform service for a basic online store. 
+This project offers APIs for users to browse products and place orders.
+It is designed with OOP principles and SQL Server for data persistence
+Functionalities are exposed via a RESTful API with various design patterns for maintainability and scalability.
+The APIs can be integrated and tested with Postman, Bruno and Fiddler.
+Database is designed and mantained using code first approach from Entity Framework.
 
 ## Arhitecture
 
