@@ -8,10 +8,15 @@
 - Database is designed and mantained using code first approach from Entity Framework
 
 ## Arhitecture
-- Controllers:                   HTTP endpoints for all APIs
-- Core:                          Various classes for error and responses handling and some general classes
-- DTOs:                          Each endpoint will use a Create, Update and Get Dto model
-- Interfaces:                    Interfaces for service and repository classes
+
+| Folder                        | Description                                                                    |
+|-------------------------------|--------------------------------------------------------------------------------|
+| Controllers                   | HTTP endpoints for all APIs                                                    |
+| Core                          | Various classes for error and responses handling and some general classes      |
+| DTOs                          | Each endpoint will use a Create, Update and Get Dto model                      |
+| Interfaces                    | Interfaces for service and repository classes                                  |
+
+                  
 - Migrations:                    Entity framework database changes
 - Models:                        Database models for each entity: User, Product, Order and OrderItem
 - Queries:                       URL filters and parameters for entities (Only ListProducts API)
